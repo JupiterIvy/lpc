@@ -1,6 +1,9 @@
 import turtle
 import random
 
+letter = turtle.Turtle()
+letter.hideturtle()
+
 # Player One
 playerOne = turtle.Turtle()
 playerOne.color("green")
@@ -28,10 +31,16 @@ playerTwo.goto(-200, -100)
 # Developing the game
 for i in range(20):
     if playerOne.pos() >= (300, 100):
-        print("Player One Wins")
+        letter.penup()
+        letter.goto(-150,220)
+        letter.pendown()
+        letter.write("PLAYER ONE WINS", font=("Segoe UI", 32, "normal"))
         break
     elif playerTwo.pos() >= (300, -140):
-        print("Player Two Wins!")
+        letter.penup()
+        letter.goto(-150,220)
+        letter.pendown()
+        letter.write("PLAYER TWO WINS", font=("Segoe UI", 32, "normal"))
         break
     else:
         # PlayerOne turn
