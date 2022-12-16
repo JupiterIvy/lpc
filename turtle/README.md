@@ -27,6 +27,11 @@ git config --global user.name [seu nickname]
 
 Clone o repositório em uma pasta vazia (recomendado) e acesse a pasta do repo
 
+Em seguida, dentro da pasta /turtle, apenas digite .py e o nome do exercício
+
+```bash
+.py Exercicio1-Fibonacci.py
+```
 
 ## Exercício 1 - Sequência de Fibonacci
 Cada número na série representa o comprimento dos lados de um quadrado. O quadrado de lado 0 não existe. Então começamos do quadrado de lado 1. O próximo quadrado também tem lado 1. 
@@ -66,6 +71,7 @@ Ao clicar em qualquer ponto da tela exibida pela biblioteca turtle, é possível
 Como forma de finalizar o estudo envolvendo as funções comuns da biblioteca turtle, foi desenvolvido um jogo simples para duas pessoas.
 
 Objetivo: O jogador cuja tartaruga chegar primeiro a sua casa ganha o jogo.
+
 Como jogar:
 
 - Cada jogador lança um dado para obter um número.
