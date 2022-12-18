@@ -1,11 +1,12 @@
 from turtle import Turtle
-import random
+
 
 class Block(Turtle):
+
     def __init__(self, xpos, ypos):
         super().__init__(shape='square')
         self.up()
-        self.shapesize(0.7,3)
+        self.shapesize(0.7, 3)
         self.goto(xpos, ypos)
         if ypos == 270:
             self.color('red')
@@ -15,8 +16,9 @@ class Block(Turtle):
             self.color('green')
         if ypos == 170 or ypos == 190:
             self.color('yellow')
-    
-    def collisions(self, block, ball):
+
+    @staticmethod
+    def collisions(block, ball):
         block_x, block_y = block.xcor(), block.ycor()
         ball_x, ball_y = ball.xcor(), ball.ycor()
         if block.isvisible():

@@ -11,7 +11,6 @@ class Paddle(Turtle):
         self.shapesize(stretch_wid=4, stretch_len=1)
         self.penup()
         self.goto(0, -350)
-    
 
     def paddle_right(self):
         x = self.xcor()
@@ -21,7 +20,6 @@ class Paddle(Turtle):
             x = 250
         self.setx(x)
 
-
     def paddle_left(self):
         x = self.xcor()
         if x > -250:
@@ -29,8 +27,4 @@ class Paddle(Turtle):
         else:
             x = -250
         self.setx(x)
-
-    
-    
-    
 

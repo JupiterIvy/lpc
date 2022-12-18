@@ -1,12 +1,11 @@
 import turtle
-from turtle import Screen, Turtle
+import vlc
+from turtle import Screen
 from modules.breakout_paddle import *
 from modules.breakout_ball import Ball
 from modules.breakout_blocks import *
 from modules.breakout_hud import *
 from modules.breakout_score import *
-import vlc
-import time
 
 screen = Screen()
 screen.bgcolor("black")
@@ -28,7 +27,7 @@ ball = Ball()
 x_list = [-245, -175, -105, -35, 35, 105, 175, 245]
 y_list = [270, 250, 230, 210, 190, 170]
 blocks = []
-hidblock = 0
+hid_block = 0
 
 screen.listen()
 screen.onkeypress(paddle.paddle_right, "d")
@@ -36,18 +35,18 @@ screen.onkeypress(paddle.paddle_left, "a")
 
 for i in x_list:
     for j in y_list:
-        block = Block(i,j)
+        block = Block(i, j)
         blocks.append(block)
 
 while True:
-    brick = vlc.MediaPlayer('brick.wav')
-    pad = vlc.MediaPlayer('pad.wav')
-    bop = vlc.MediaPlayer('bop.wav')
-
     screen.update()
     hud.goto(0, 260)
     ball.setx(ball.xcor() + ball.dx)
     ball.sety(ball.ycor() + ball.dy)
+
+    brick = vlc.MediaPlayer('brick.wav')
+    pad = vlc.MediaPlayer('pad.wav')
+    bop = vlc.MediaPlayer('bop.wav')
 
     if ball.xcor() > 290:
         ball.setx(290)
@@ -78,7 +77,7 @@ while True:
     for i in blocks:
         if i.collisions(i, ball):
             i.hideturtle()
-            hidblock += 1
+            hid_block += 1
             brick.play()
             ball.dy *= 1.05
             if i.color() == ('yellow', 'yellow'):
@@ -91,16 +90,14 @@ while True:
                 count += 3
                 score.scoring(count)
     
-    if hidblock == 48:
+    if hid_block == 48:
         screen.update()
-        score.goto(0,0)
+        score.goto(0, 0)
         score.write("YOU WON!", align="center", font=("verdana", 50, "bold"))
         turtle.done()
     
     if att == 5:
         screen.update()
-        score.goto(0,0)
+        score.goto(0, 0)
         score.write("GAME OVER", align="center", font=("verdana", 50, "bold"))
         turtle.done()
-            
-turtle.mainloop()

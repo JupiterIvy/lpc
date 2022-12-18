@@ -15,7 +15,7 @@ class Hud(Turtle):
 
         for i in range(4):
         
-            if i% 2 == 0:
+            if i % 2 == 0:
                 self.forward(600) 
                 self.right(90)
             else:
