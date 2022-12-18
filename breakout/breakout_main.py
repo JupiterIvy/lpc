@@ -1,12 +1,12 @@
 import turtle
-import vlc
+from playsound import playsound
 from turtle import Screen
 from modules.breakout_paddle import *
 from modules.breakout_ball import Ball
 from modules.breakout_blocks import *
 from modules.breakout_hud import *
 from modules.breakout_score import *
-
+import time
 screen = Screen()
 screen.bgcolor("black")
 screen.setup(width=600, height=800)
@@ -44,29 +44,25 @@ while True:
     ball.setx(ball.xcor() + ball.dx)
     ball.sety(ball.ycor() + ball.dy)
 
-    brick = vlc.MediaPlayer('brick.wav')
-    pad = vlc.MediaPlayer('pad.wav')
-    bop = vlc.MediaPlayer('bop.wav')
-
     if ball.xcor() > 290:
         ball.setx(290)
         ball.dx *= -1
-        bop.play()
+        playsound('bop.wav', block=False)
 
     if ball.xcor() < -290:
         ball.setx(-290)
         ball.dx *= -1
-        bop.play()
+        playsound('bop.wav', block=False)
 
     if ball.ycor() > 400:
         ball.sety(400)
         ball.dy *= -1
-        bop.play()
+        playsound('bop.wav', block=False)
 
     if -340 > ball.ycor() > -350 and paddle.xcor() + 50 > ball.xcor() > paddle.xcor() - 50:
         ball.sety(-340)
         ball.dy *= -1
-        pad.play()
+        playsound('pad.wav', block=False)
 
     if ball.ycor() < -360:
         ball.goto(0, 0)
@@ -78,7 +74,7 @@ while True:
         if i.collisions(i, ball):
             i.hideturtle()
             hid_block += 1
-            brick.play()
+            playsound('brick.wav', block=False)
             ball.dy *= 1.05
             if i.color() == ('yellow', 'yellow'):
                 count += 1
@@ -101,3 +97,6 @@ while True:
         score.goto(0, 0)
         score.write("GAME OVER", align="center", font=("verdana", 50, "bold"))
         turtle.done()
+
+
+
