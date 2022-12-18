@@ -33,3 +33,13 @@ E por fim, execute o código .py
 # Executando o arquivo
 py breakout_main.py
 ```
+
+
+# COLABORADORES
+
+<table>
+<tr>
+    <td align="center"><a href="https://github.com/JupiterIvy"><img src="https://media.licdn.com/dms/image/D4D03AQHt30NNq_kSvQ/profile-displayphoto-shrink_400_400/0/1670128148472?e=1677110400&v=beta&t=0qSqk2zVgjYNNHqF8_p3BtYed18SuSrGcR6_Obe7vIU" width="100px;" alt=""/><br /><sub><b>Evelyn Bessa</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/haidao01"><img src="https://media.licdn.com/dms/image/D4D03AQH0bS2STXvw-g/profile-displayphoto-shrink_400_400/0/1671076152889?e=1677110400&v=beta&t=IDnwra1u7hU9YzrbdFg978Lie9xmR088COxLnQ0vHx8" width="100px;" alt=""/><br /><sub><b>Francisco Neto</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/End-009"><img src="https://media-exp1.licdn.com/dms/image/C4E03AQGVuKyd3pPOFA/profile-displayphoto-shrink_800_800/0/1635445369531?e=1675900800&v=beta&t=nEASP9lZeybgLi2-BVV2BbOPQmR3KOYqKzCrzxh-ZPQ" width="100px;" alt=""/><br /><sub><b>Endrique Silva</b></sub></a><br /></td>
+</table>
