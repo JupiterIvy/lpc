@@ -6,7 +6,7 @@ from modules.breakout_ball import Ball
 from modules.breakout_blocks import *
 from modules.breakout_hud import *
 from modules.breakout_score import *
-import time
+
 screen = Screen()
 screen.bgcolor("black")
 screen.setup(width=600, height=800)
@@ -14,7 +14,6 @@ screen.title("Breakout")
 screen.tracer(0)
 
 hud = Hud()
-
 count, att = 0, 0
 score = Score()
 score.scoring(count)
@@ -97,6 +96,3 @@ while True:
         score.goto(0, 0)
         score.write("GAME OVER", align="center", font=("verdana", 50, "bold"))
         turtle.done()
-
-
-
