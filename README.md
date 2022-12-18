@@ -11,5 +11,9 @@ As pastas estão de acordo com a ordem e requisitos de atividades solicitadas pe
       ├── Exercício 2 - Árvore Fractal
       ├── Exercício 2 - Criar triângulos
       ├── Exercício 2 - Corrida
+├── /pong-game
+      ├── arcade-bleep-sound.wav
+      ├── bounce.wav
+      ├── Pong 
 ```
 
