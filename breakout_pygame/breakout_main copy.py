@@ -8,7 +8,7 @@ COLOR_WHITE = (255, 255, 255)
 
 size = (600, 800)
 screen = pygame.display.set_mode(size)
-pygame.display.set_caption("Breakout in Pygame")
+pygame.display.set_caption("MyPong - PyGame Edition - 2022-12-12")
 
 # score text
 score_font = pygame.font.Font('assets/PressStart2P.ttf', 44)
@@ -24,20 +24,19 @@ victory_text_rect = score_text.get_rect()
 # sound effects
 bop_sfx = pygame.mixer.Sound('bop.wav')
 pad_sfx = pygame.mixer.Sound('pad.wav')
+brick_sfx = pygame.mixer.Sound('brick.wav')
 
 # player 1
 player_1 = pygame.image.load("assets/player.png")
 player_1 = pygame.transform.scale(player_1, (75,15))
-player_1_y = 750
-player_1_x = 300
+player_1_rect = pygame.Rect((300, 750),(249,56))
 player_1_move_right = False
 player_1_move_left = False
 
 # ball
 ball = pygame.image.load("assets/ball.png")
-ball = pygame.transform.scale(ball, (15,15))
-ball_x = 300
-ball_y = 360
+ball = pygame.transform.scale(ball, (12,12))
+ball_rect = pygame.Rect((300, 360),(15,15))
 ball_dx = 2
 ball_dy = 2
 
@@ -49,10 +48,14 @@ game_loop = True
 game_clock = pygame.time.Clock()
 
 x_list = [10, 80, 150, 220, 290, 360, 430, 500]
-y_list = [130, 150, 170, 190, 210, 230, 250]
+y_list = [130, 150, 170, 190, 210, 230, 250, 270]
 blocks = []
 hid_block = 0
 
+for i in x_list:
+        for j in y_list:
+                block = Block(i,j)
+                blocks.append(block)
 
 while game_loop:
 
@@ -77,67 +80,68 @@ while game_loop:
 
         # clear screen
         screen.fill(COLOR_BLACK)
-
+        
         # ball collision with the wall
-        if ball_y <= 0:
+        if ball_rect.y <= 0:
             ball_dy *= -1
             bop_sfx.play()
             
             # ball collision with the wall
-        if ball_x > 600:
+        if ball_rect.x > 590:
             ball_dx *= -1
             bop_sfx.play()
-        elif ball_x <= 0:
+        elif ball_rect.x <= 0:
             ball_dx *= -1
             bop_sfx.play()
 
         # ball collision with the player 1 's paddle
-        if 740 < ball_y < 755:
-            if player_1_x < ball_x + 25 < player_1_x + 100:
+        if 740 < ball_rect.y < 750:
+            if player_1_rect.x < ball_rect.x + 15 < player_1_rect.x + 100:
                 ball_dy *= -1
-                bop_sfx.play()
+                pad_sfx.play()
 
-        if ball_y > 780:
-            ball_x = 300
-            ball_y = 360
+        if ball_rect.y > 780:
+            ball_rect.y = 360
+            ball_rect.x = 300
             ball_dy *= 1
 
         # ball movement
-        ball_x = ball_x + ball_dx
-        ball_y = ball_y + ball_dy
+        ball_rect.x = ball_rect.x + ball_dx
+        ball_rect.y = ball_rect.y + ball_dy
 
         # player 1 up movement
         if player_1_move_right:
-            player_1_x -= 5
+            player_1_rect.x -= 5
         else:
-            player_1_x += 0
+            player_1_rect.x += 0
 
         # player 1 down movement
         if player_1_move_left:
-            player_1_x += 5
+            player_1_rect.x += 5
         else:
-            player_1_x += 0
+            player_1_rect.x += 0
 
         # player 1 collides with upper wall
-        if player_1_x <= 0:
-            player_1_x = 0
+        if player_1_rect.x <= 0:
+            player_1_rect.x = 0
 
         # player 1 collides with lower wall
-        if player_1_x > 530:
-            player_1_x = 530
+        if player_1_rect.x > 525:
+            player_1_rect.x = 525
 
         # drawing objects
-        screen.blit(ball, (ball_x, ball_y))
-        screen.blit(player_1, (player_1_x, player_1_y))
+        screen.blit(ball, ball_rect)
+        screen.blit(player_1, player_1_rect)
         screen.blit(score_text, score_text_rect)
-
-        for i in x_list:
-            for j in y_list:
-                block = pygame.image.load("assets/teste.png")
-                block = pygame.transform.scale(block, (65,15))
-                screen.blit(block, (i, j))
-                blocks.append(blocks)
-
+        for i in blocks:
+            if (i.rect.colliderect(ball_rect) == False):
+                screen.blit(i.image, i.rect)
+            else:
+                blocks.remove(i)
+                hid_block += 1
+                brick_sfx.play()
+                ball_dy *= -1.05
+            
     else:
         # drawing victory
         screen.fill(COLOR_BLACK)
