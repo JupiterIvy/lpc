@@ -21,7 +21,6 @@ victory_font = pygame.font.Font('assets/PressStart2P.ttf', 100)
 victory_text = victory_font .render('VICTORY', True, COLOR_WHITE, COLOR_BLACK)
 victory_text_rect = score_text.get_rect()
 
-
 # sound effects
 bop_sfx = pygame.mixer.Sound('bop.wav')
 pad_sfx = pygame.mixer.Sound('pad.wav')
@@ -93,16 +92,15 @@ while game_loop:
             bop_sfx.play()
 
         # ball collision with the player 1 's paddle
-        if 50 < ball_x < 100:
-            if player_1_y < ball_y + 25 < player_1_y + 150:
-                ball_dx *= -1
+        if 740 < ball_y < 755:
+            if player_1_x < ball_x + 25 < player_1_x + 100:
+                ball_dy *= -1
                 bop_sfx.play()
 
-        if ball_y < 745:
-            ball_y = 400
+        if ball_y > 780:
+            ball_x = 300
             ball_y = 360
-            ball_dy *= -1
-            ball_dx *= -1
+            ball_dy *= 1
 
         # ball movement
         ball_x = ball_x + ball_dx
@@ -121,12 +119,12 @@ while game_loop:
             player_1_x += 0
 
         # player 1 collides with upper wall
-        if player_1_y <= 0:
-            player_1_y = 0
+        if player_1_x <= 0:
+            player_1_x = 0
 
         # player 1 collides with lower wall
-        elif player_1_y >= 720:
-            player_1_y = 720
+        if player_1_x > 530:
+            player_1_x = 530
 
         # drawing objects
         screen.blit(ball, (ball_x, ball_y))
@@ -136,10 +134,10 @@ while game_loop:
         for i in x_list:
             for j in y_list:
                 block = pygame.image.load("assets/teste.png")
-                block = pygame.Color(0,0,0)
                 block = pygame.transform.scale(block, (65,15))
                 screen.blit(block, (i, j))
                 blocks.append(blocks)
+
     else:
         # drawing victory
         screen.fill(COLOR_BLACK)
