@@ -93,8 +93,35 @@ while game_loop:
 
         # ball collision with the player 1 's paddle
         if 740 < ball_y < 755:
-            if player_1_x < ball_x + 25 < player_1_x + 100:
+            
+            # collision with the right side of the paddle with the ball coming from
+            # the left side
+            if player_1_x + 50 <= ball_x + 25 <= player_1_x + 100 and ball_dx == 2:
+
                 ball_dy *= -1
+                bop_sfx.play()
+
+            # collision with the left side of the paddle with the ball coming from
+            # the left side
+            elif player_1_x <= ball_x + 25 <= player_1_x + 49 and ball_dx == 2:
+
+                ball_dy *= -1
+                ball_dx *= -1
+                bop_sfx.play()
+
+            # collision with the left side of the paddle with the ball coming from
+            # the right side
+            elif player_1_x <= ball_x + 25 <= player_1_x + 49 and ball_dx == -2:
+
+                ball_dy *= -1
+                bop_sfx.play()
+
+            # collision with the right side of the paddle with the ball coming from
+            # the right side
+            elif player_1_x + 50 <= ball_x + 25 <= player_1_x + 100 and ball_dx == -2:
+
+                ball_dy *= -1
+                ball_dx *= -1
                 bop_sfx.play()
 
         if ball_y > 780:
