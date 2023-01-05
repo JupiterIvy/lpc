@@ -11,15 +11,27 @@ screen = pygame.display.set_mode(size)
 pygame.display.set_caption("MyPong - PyGame Edition - 2022-12-12")
 
 # score text
-score_font = pygame.font.Font('assets/PressStart2P.ttf', 44)
-score_text = score_font.render('00 x 00', True, COLOR_WHITE, COLOR_BLACK)
+score_font = pygame.font.Font('assets\JustMyType-KePl.ttf', 130)
+score_text = score_font.render('00', True, COLOR_WHITE, COLOR_BLACK)
 score_text_rect = score_text.get_rect()
-score_text_rect.center = (300, 50)
+score_text_rect.center = (100, 75)
+
+att_font = pygame.font.Font('assets\JustMyType-KePl.ttf', 130)
+att_text = att_font.render('00', True, COLOR_WHITE, COLOR_BLACK)
+att_text_rect = att_text.get_rect()
+att_text_rect.center = (500, 75)
 
 # victory text
-victory_font = pygame.font.Font('assets/PressStart2P.ttf', 100)
+victory_font = pygame.font.Font('assets/PressStart2P.ttf', 50)
 victory_text = victory_font .render('VICTORY', True, COLOR_WHITE, COLOR_BLACK)
 victory_text_rect = score_text.get_rect()
+victory_text_rect.center = (180, 400)
+
+# Game Over text
+gameover_font = pygame.font.Font('assets/PressStart2P.ttf', 50)
+gameover_text = gameover_font .render('GAME OVER', True, COLOR_WHITE, COLOR_BLACK)
+gameover_text_rect = score_text.get_rect()
+gameover_text_rect.center = (150, 400)
 
 # sound effects
 bop_sfx = pygame.mixer.Sound('bop.wav')
@@ -41,7 +53,7 @@ ball_dx = 2
 ball_dy = 2
 
 # score
-score_1 = 0
+count, att  = 0, 0
 
 # game loop
 game_loop = True
@@ -76,8 +88,7 @@ while game_loop:
                 player_1_move_left = False
 
     # checking the victory condition
-    if score_1 < 5:
-
+    if att < 5 and hid_block < 64:
         # clear screen
         screen.fill(COLOR_BLACK)
         
@@ -104,6 +115,7 @@ while game_loop:
             ball_rect.y = 360
             ball_rect.x = 300
             ball_dy *= 1
+            att += 1
 
         # ball movement
         ball_rect.x = ball_rect.x + ball_dx
@@ -121,33 +133,45 @@ while game_loop:
         else:
             player_1_rect.x += 0
 
-        # player 1 collides with upper wall
+        # player 1 collides with left wall
         if player_1_rect.x <= 0:
             player_1_rect.x = 0
 
-        # player 1 collides with lower wall
+        # player 1 collides with right wall
         if player_1_rect.x > 525:
             player_1_rect.x = 525
+
+        score_text = score_font.render('0' + str(count), True, COLOR_WHITE, COLOR_BLACK)
+        att_text = score_font.render('0' + str(att), True, COLOR_WHITE, COLOR_BLACK)
 
         # drawing objects
         screen.blit(ball, ball_rect)
         screen.blit(player_1, player_1_rect)
         screen.blit(score_text, score_text_rect)
+        screen.blit(att_text, att_text_rect)
+
         for i in blocks:
             if (i.rect.colliderect(ball_rect) == False):
                 screen.blit(i.image, i.rect)
             else:
                 blocks.remove(i)
                 hid_block += 1
+                count += 1
                 brick_sfx.play()
                 ball_dy *= -1.05
-            
-    else:
+    elif hid_block == 64:
         # drawing victory
         screen.fill(COLOR_BLACK)
         screen.blit(score_text, score_text_rect)
+        screen.blit(att_text, att_text_rect)
         screen.blit(victory_text, victory_text_rect)
-
+    elif att == 5:
+        # drawing game overs
+        screen.fill(COLOR_BLACK)
+        screen.blit(score_text, score_text_rect)
+        screen.blit(att_text, att_text_rect)
+        screen.blit(gameover_text, gameover_text_rect)
+       
     # update screen
     pygame.display.flip()
     game_clock.tick(60)
