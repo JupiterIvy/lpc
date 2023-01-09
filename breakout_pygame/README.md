@@ -40,5 +40,7 @@ py breakout_main.py
 <table>
 <tr>
     <td align="center"><a href="https://github.com/JupiterIvy"><img src="https://media.licdn.com/dms/image/D4D03AQHt30NNq_kSvQ/profile-displayphoto-shrink_400_400/0/1670128148472?e=1677110400&v=beta&t=0qSqk2zVgjYNNHqF8_p3BtYed18SuSrGcR6_Obe7vIU" width="100px;" alt=""/><br /><sub><b>Evelyn Bessa</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/DrioSRF"><img src="https://avatars.githubusercontent.com/u/119884644?v=4" width="100px;" alt=""/><br /><sub><b>Dário Souza</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/Malzinha0221"><img src="https://user-images.githubusercontent.com/65917017/211250069-9fbe893b-a0c5-4e36-aeaf-7b5ffa12dbbd.jpg" width="100px;" alt=""/><br /><sub><b>Daniel Nazário</b></sub></a><br /></td>
     
 </table>
