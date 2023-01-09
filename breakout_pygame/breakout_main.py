@@ -85,7 +85,7 @@ while game_loop:
         # clear screen
         screen.fill(COLOR_BLACK)
 
-        # player 1 movements
+        # player_1 movements
         player_1.movements()
 
         # ball collision with the upper wall
@@ -178,12 +178,12 @@ while game_loop:
         att_text.scoring(att, screen, 380, 35)
         pygame.draw.rect(screen, COLOR_WHITE, pygame.Rect(0, 0, 600, 800), 12)
 
-        #drawing blocks
+        # drawing blocks
         for i in blocks:
             if not i.rect.colliderect(ball.rect):
                 screen.blit(i.image, i.rect)
             else:
-                #checking score and collisions
+                # checking score and collisions
                 if i.rect.y == 150 or i.rect.y == 170:
                     count += 7
                     if (ball.rect.x < i.rect.x and ball.rect.y < i.rect.y+12) or \
