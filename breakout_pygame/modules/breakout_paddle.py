@@ -2,6 +2,7 @@ import pygame
 
 Cyan = (10, 189, 200)
 
+
 class Paddle(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -12,18 +13,21 @@ class Paddle(pygame.sprite.Sprite):
         self.rect.y = 750
         self.move_right = False
         self.move_left = False
+        self.accelerate = False
 
     def movements(self):
-         # player 1 up movement
+        # player 1 up movement
         if self.move_right:
-            self.rect.x -= 5
-        else:
-            self.rect.x += 0
+            if self.accelerate:
+                self.rect.x -= 8
+            else:
+                self.rect.x -= 5
         # player 1 down movement
         if self.move_left:
-            self.rect.x += 5
-        else:
-            self.rect.x += 0
+            if self.accelerate:
+                self.rect.x += 8
+            else:
+                self.rect.x += 5
         # player 1 collides with left wall
         if self.rect.x <= 0:
             self.rect.x = 0
