@@ -1,28 +1,21 @@
-from turtle import Turtle
+import pygame
+
+COLOR_WHITE = (255, 255, 255)
+COLOR_BLACK = (0, 0, 0)
 
 
-class Score(Turtle):
-
-    def __init__(self):
+class Score(pygame.sprite.Sprite):
+    def __init__(self,screen):
         super().__init__()
-        self.speed(0)
-        self.pencolor("white")
-        self.penup()
-        self.hideturtle()
-
-    def scoring(self, count):
-        self.goto(-175, 275)
-        self.write("000", align="center", font=("Just my type", 72, "bold"))
-        self.clear()
-        if count >= 10:
-            self.write("0{}".format(count), align="center", font=("Just my type", 72, "bold"))
-        elif count < 10:
-            self.write("00{}".format(count), align="center", font=("Just my type", 72, "bold"))
-
-    def attempts(self, att):
-        self.goto(175, 275)
-        self.write("000", align="center", font=("Just my type", 72, "bold"))
-        self.clear()
-        self.write("00{}".format(att), align="center", font=("Just my type", 72, "bold"))
-
+        self.font = pygame.font.Font('assets\JustMyType-KePl.ttf', 130)
+        self.rect = pygame.draw.rect(screen, (COLOR_BLACK), (0, 0, 0, 0))
+        pygame.display.update()
+    
+    def scoring(self, point, screen, xpos, ypos):
+        if (point < 10):
+            screen.blit(self.font.render('00' + str(point), True, COLOR_WHITE, COLOR_BLACK), (xpos, ypos))
+        elif(point >= 100):
+            screen.blit(self.font.render('' + str(point), True, COLOR_WHITE, COLOR_BLACK), (xpos, ypos))
+        elif(point >= 10 or point < 100):
+            screen.blit(self.font.render('0' + str(point), True, COLOR_WHITE, COLOR_BLACK), (xpos, ypos))
         

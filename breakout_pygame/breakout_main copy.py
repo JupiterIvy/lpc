@@ -1,5 +1,8 @@
 import pygame
 from modules.breakout_blocks import *
+from modules.breakout_ball import *
+from modules.breakout_paddle import *
+from modules.breakout_score import *
 
 pygame.init()
 
@@ -8,30 +11,23 @@ COLOR_WHITE = (255, 255, 255)
 
 size = (600, 800)
 screen = pygame.display.set_mode(size)
-pygame.display.set_caption("MyPong - PyGame Edition - 2022-12-12")
+pygame.display.set_caption("Breakout - PyGame Edition")
 
 # score text
-score_font = pygame.font.Font('assets\JustMyType-KePl.ttf', 130)
-score_text = score_font.render('00', True, COLOR_WHITE, COLOR_BLACK)
-score_text_rect = score_text.get_rect()
-score_text_rect.center = (100, 75)
-
-att_font = pygame.font.Font('assets\JustMyType-KePl.ttf', 130)
-att_text = att_font.render('00', True, COLOR_WHITE, COLOR_BLACK)
-att_text_rect = att_text.get_rect()
-att_text_rect.center = (500, 75)
+score_text = Score(screen)
+att_text = Score(screen)
 
 # victory text
 victory_font = pygame.font.Font('assets/PressStart2P.ttf', 50)
-victory_text = victory_font .render('VICTORY', True, COLOR_WHITE, COLOR_BLACK)
-victory_text_rect = score_text.get_rect()
-victory_text_rect.center = (180, 400)
+victory_text = victory_font.render('VICTORY', True, COLOR_WHITE, COLOR_BLACK)
+victory_text_rect = victory_text.get_rect()
+victory_text_rect.center = (300, 400)
 
 # Game Over text
 gameover_font = pygame.font.Font('assets/PressStart2P.ttf', 50)
 gameover_text = gameover_font .render('GAME OVER', True, COLOR_WHITE, COLOR_BLACK)
-gameover_text_rect = score_text.get_rect()
-gameover_text_rect.center = (150, 400)
+gameover_text_rect = gameover_text.get_rect()
+gameover_text_rect.center = (300, 400)
 
 # sound effects
 bop_sfx = pygame.mixer.Sound('bop.wav')
@@ -39,16 +35,11 @@ pad_sfx = pygame.mixer.Sound('pad.wav')
 brick_sfx = pygame.mixer.Sound('brick.wav')
 
 # player 1
-player_1 = pygame.image.load("assets/player.png")
-player_1 = pygame.transform.scale(player_1, (75,15))
-player_1_rect = pygame.Rect((300, 750),(249,56))
-player_1_move_right = False
-player_1_move_left = False
+player_1 = Paddle()
+player_1_accelerate = False
 
 # ball
-ball = pygame.image.load("assets/ball.png")
-ball = pygame.transform.scale(ball, (12,12))
-ball_rect = pygame.Rect((300, 360),(15,15))
+ball = Ball()
 ball_dx = 2
 ball_dy = 2
 
@@ -59,8 +50,8 @@ count, att  = 0, 0
 game_loop = True
 game_clock = pygame.time.Clock()
 
-x_list = [10, 80, 150, 220, 290, 360, 430, 500]
-y_list = [130, 150, 170, 190, 210, 230, 250, 270]
+x_list = [20, 60, 100, 140, 180, 220, 260, 300, 340, 380, 420, 460, 500, 540]
+y_list = [150, 170, 190, 210, 230, 250, 270, 290]
 blocks = []
 hid_block = 0
 
@@ -70,108 +61,253 @@ for i in x_list:
                 blocks.append(block)
 
 while game_loop:
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             game_loop = False
-
-        #  keystroke events
+                #  keystroke events
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                player_1_move_right = True
+                player_1.move_right = True
             if event.key == pygame.K_RIGHT:
-                player_1_move_left = True
+                player_1.move_left = True
+            if event.key == pygame.K_SPACE:
+                player_1_accelerate = True
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
-                player_1_move_right = False
+                player_1.move_right = False
             if event.key == pygame.K_RIGHT:
-                player_1_move_left = False
-
+                player_1.move_left = False
+            if event.key == pygame.K_SPACE:
+                player_1_accelerate = False
+    
     # checking the victory condition
-    if att < 5 and hid_block < 64:
+    if True:
         # clear screen
         screen.fill(COLOR_BLACK)
         
-        # ball collision with the wall
-        if ball_rect.y <= 0:
+        player_1.movements()
+        
+
+        # ball collision with the upper wall
+        if ball.rect.y <= 5:
             ball_dy *= -1
             bop_sfx.play()
             
-            # ball collision with the wall
-        if ball_rect.x > 590:
+        # ball collision with the wall
+        if ball.rect.x > 580:
+            ball.rect.x = 580
             ball_dx *= -1
             bop_sfx.play()
-        elif ball_rect.x <= 0:
+        elif ball.rect.x <= 5:
+            ball.rect.x = 5
             ball_dx *= -1
             bop_sfx.play()
 
-        # ball collision with the player 1 's paddle
-        if 740 < ball_rect.y < 750:
-            if player_1_rect.x < ball_rect.x + 15 < player_1_rect.x + 100:
+       # ball collision with the player 1 's paddle
+        if 740 <= ball.rect.y <= 750:
+
+            # collision with the right side of the paddle with the ball coming from
+            # the left side
+            if player_1.rect.x + 65 <= ball.rect.x + 15 <= player_1.rect.x + 100 and ball_dx > 0:
+                ball_dy = ball_dx
                 ball_dy *= -1
-                pad_sfx.play()
+                ball.rect.y = 740
+                bop_sfx.play()
 
-        if ball_rect.y > 780:
-            ball_rect.y = 360
-            ball_rect.x = 300
-            ball_dy *= 1
+            # collision with the left side of the paddle with the ball coming from
+            # the left side
+            elif player_1.rect.x <= ball.rect.x + 15 <= player_1.rect.x + 34 and ball_dx > 0:
+                ball_dy = ball_dx
+                ball_dy *= -1
+                ball_dx *= -1
+                ball.rect.y = 740
+                bop_sfx.play()
+
+            # collision with the left side of the paddle with the ball coming from
+            # the right side
+            elif player_1.rect.x <= ball.rect.x + 15 <= player_1.rect.x + 34 and ball_dx < 0:
+                ball_dy = ball_dx
+                ball_dx *= -1
+                ball_dy *= -1
+                ball.rect.y = 740
+                bop_sfx.play()
+
+            # collision with the right side of the paddle with the ball coming from
+            # the right side
+            elif player_1.rect.x + 65 <= ball.rect.x + 15 <= player_1.rect.x + 100 and ball_dx < 0:
+                ball_dy = ball_dx
+                ball_dy *= -1
+                ball_dx *= -1
+                ball.rect.y = 740
+                bop_sfx.play()
+
+            # collision with the middle of the paddle with the ball coming from
+            # the any side
+            elif player_1.rect.x + 35 <= ball.rect.x + 15 <= player_1.rect.x + 65 and ball_dx < 0:
+                ball_dy = -(1 + ball_dx)
+                ball_dx *= -1
+                ball.rect.y = 740 
+                bop_sfx.play()
+
+            elif player_1.rect.x + 35 <= ball.rect.x + 15 <= player_1.rect.x + 65 and ball_dx > 0:
+                ball_dy = -(1 + ball_dx)
+                ball_dx *= -1
+                ball.rect.y = 740
+                bop_sfx.play()
+            
+
+        # lost ball
+        if ball.rect.y > 780:
+            ball.rect.y = 360
+            ball.rect.x = 300
+            ball_dy = 2
+            ball_dx = 2
             att += 1
+            player_1.rect.x = 280
+            player_1.rect.y = 750
 
+        print("x = ",ball_dx)
+        print("y = ", ball_dy)
         # ball movement
-        ball_rect.x = ball_rect.x + ball_dx
-        ball_rect.y = ball_rect.y + ball_dy
-
-        # player 1 up movement
-        if player_1_move_right:
-            player_1_rect.x -= 5
-        else:
-            player_1_rect.x += 0
-
-        # player 1 down movement
-        if player_1_move_left:
-            player_1_rect.x += 5
-        else:
-            player_1_rect.x += 0
-
-        # player 1 collides with left wall
-        if player_1_rect.x <= 0:
-            player_1_rect.x = 0
-
-        # player 1 collides with right wall
-        if player_1_rect.x > 525:
-            player_1_rect.x = 525
-
-        score_text = score_font.render('0' + str(count), True, COLOR_WHITE, COLOR_BLACK)
-        att_text = score_font.render('0' + str(att), True, COLOR_WHITE, COLOR_BLACK)
-
+        ball.rect.x = ball.rect.x + ball_dx
+        ball.rect.y = ball.rect.y + ball_dy
         # drawing objects
-        screen.blit(ball, ball_rect)
-        screen.blit(player_1, player_1_rect)
-        screen.blit(score_text, score_text_rect)
-        screen.blit(att_text, att_text_rect)
+        screen.blit(ball.image, ball.rect)
+        screen.blit(player_1.image, player_1.rect)
+        score_text.scoring(count, screen, 60, 35)
+        att_text.scoring(att, screen, 380, 35)
+        pygame.draw.rect(screen, COLOR_WHITE, pygame.Rect(0, 0, 600, 800),12)
 
         for i in blocks:
-            if (i.rect.colliderect(ball_rect) == False):
+
+            if not i.rect.colliderect(ball.rect):
                 screen.blit(i.image, i.rect)
+
             else:
+
+                if i.rect.y == 150 or i.rect.y == 170:
+
+                    count += 7
+
+                    if ball_dy < 0:
+                        if ball_dy > -7:
+                            if ball_dx > 0:
+
+                                ball_dy = 7
+                                ball_dx = 7
+
+                            else:
+
+                                ball_dy = 7
+                                ball_dx = -7
+
+                        else:
+                            ball_dy *= -1
+
+                    elif ball_dy > 0:
+                        if ball_dy < 7:
+                            if ball_dx > 0:
+
+                                ball_dy = -7
+                                ball_dx = 7
+
+                            else:
+
+                                ball_dy = -7
+                                ball_dx = -7
+
+                        else:
+                            ball_dy *= -1
+
+                if i.rect.y == 190 or i.rect.y == 210:
+
+                    count += 5
+
+                    if ball_dy < 0:
+                        if ball_dy > -5:
+                            if ball_dx > 0:
+
+                                ball_dy = 5
+                                ball_dx = 5
+
+                            else:
+
+                                ball_dy = 5
+                                ball_dx = -5
+
+                        else:
+                            ball_dy *= -1
+
+                    elif ball_dy > 0:
+                        if ball_dy < 5:
+                            if ball_dx > 0:
+
+                                ball_dy = -5
+                                ball_dx = 5
+
+                            else:
+
+                                ball_dy = -5
+                                ball_dx = -5
+
+                        else:
+                            ball_dy *= -1
+                if i.rect.y == 230 or i.rect.y == 250:
+
+                    count += 3
+
+                    if ball_dy < 0:
+                        if ball_dy > -3:
+                            if ball_dx > 0:
+
+                                ball_dy = 3
+                                ball_dx = 3
+
+                            else:
+
+                                ball_dy = 3
+                                ball_dx = -3
+
+                        else:
+                            ball_dy *= -1
+
+                    elif ball_dy > 0:
+                        if ball_dy < 3:
+                            if ball_dx > 0:
+
+                                ball_dy = -3
+                                ball_dx = 3
+
+                            else:
+
+                                ball_dy = -3
+                                ball_dx = -3
+
+                        else:
+                            ball_dy *= -1
+
+                if i.rect.y == 270 or i.rect.y == 290:
+
+                    count += 1
+                    ball_dy *= -1
+
                 blocks.remove(i)
                 hid_block += 1
-                count += 1
                 brick_sfx.play()
-                ball_dy *= -1.05
-    elif hid_block == 64:
+
+    if hid_block == 112:
         # drawing victory
         screen.fill(COLOR_BLACK)
-        screen.blit(score_text, score_text_rect)
-        screen.blit(att_text, att_text_rect)
         screen.blit(victory_text, victory_text_rect)
-    elif att == 5:
+        ball_dx = 0
+        ball_dy = 0
+    if att == 5:
         # drawing game overs
         screen.fill(COLOR_BLACK)
-        screen.blit(score_text, score_text_rect)
-        screen.blit(att_text, att_text_rect)
         screen.blit(gameover_text, gameover_text_rect)
-       
+        ball_dx = 0
+        ball_dy = 0
+
     # update screen
     pygame.display.flip()
     game_clock.tick(60)

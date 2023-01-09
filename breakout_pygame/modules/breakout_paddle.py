@@ -1,30 +1,35 @@
-from turtle import Turtle
+import pygame
 
+Cyan = (10, 189, 200)
 
-class Paddle(Turtle):
-
+class Paddle(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.shape("square")
-        self.color('skyblue')
-        self.right(90)
-        self.shapesize(stretch_wid=4, stretch_len=1)
-        self.penup()
-        self.goto(0, -350)
+        self.image = pygame.Surface([75, 15])
+        self.image.fill(Cyan)
+        self.rect = self.image.get_rect()
+        self.rect.x = 300
+        self.rect.y = 750
+        self.move_right = False
+        self.move_left = False
 
-    def paddle_right(self):
-        x = self.xcor()
-        if x < 250:
-            x += 30
+    def movements(self):
+         # player 1 up movement
+        if self.move_right:
+            self.rect.x -= 5
         else:
-            x = 250
-        self.setx(x)
-
-    def paddle_left(self):
-        x = self.xcor()
-        if x > -250:
-            x += -30
+            self.rect.x += 0
+        # player 1 down movement
+        if self.move_left:
+            self.rect.x += 5
         else:
-            x = -250
-        self.setx(x)
+            self.rect.x += 0
+        # player 1 collides with left wall
+        if self.rect.x <= 0:
+            self.rect.x = 0
+        # player 1 collides with right wall
+        if self.rect.x > 525:
+            self.rect.x = 525
 
+
+        

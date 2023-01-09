@@ -1,16 +1,17 @@
-from turtle import Turtle
+import pygame
+
+COLOR_WHITE = (255, 255, 255)
 
 
-class Ball(Turtle):
-
+class Ball(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.color("white")
-        self.shape("circle")
-        self.penup()
-        self.shapesize(stretch_wid=0.6)
-        self.dx = 0.6
-        self.dy = -1
+        self.image = pygame.Surface([9,8])
+        self.image.fill(COLOR_WHITE)
+        self.rect = self.image.get_rect()
+        self.rect.x = 300
+        self.rect.y = 360
     
-        
+    
+
         
