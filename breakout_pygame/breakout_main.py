@@ -85,7 +85,8 @@ while game_loop:
         # clear screen
         screen.fill(COLOR_BLACK)
 
-        # player_1 movements
+        # player_
+        # 1 movements
         player_1.movements()
 
         # ball collision with the upper wall

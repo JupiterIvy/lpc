@@ -4,13 +4,13 @@ from .combat_bullet import *
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, xpos, ypos, nplayer):
+    def __init__(self, x_pos, y_pos, n_player):
         super().__init__()
-        self.image = nplayer
+        self.image = n_player
         self.image = pygame.transform.scale(self.image, (60,60))
         self.rect = self.image.get_rect()
-        self.rect.x = xpos
-        self.rect.y = ypos
+        self.rect.x = x_pos
+        self.rect.y = y_pos
         self.rotate = self.image
         self.angle = 0
         self.pos = pygame.Vector2(self.rect.center)
@@ -55,7 +55,7 @@ class Player(pygame.sprite.Sprite):
     def create_bullet(self, nball):
         return Bullet(self, nball)
 
-    def wall_col(self, obstacle, xpos, ypos):
+    def wall_col(self, obstacle, x_pos, y_pos):
         collide = pygame.Rect.colli(self.rect, obstacle)
         
         

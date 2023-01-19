@@ -4,8 +4,9 @@ from modules.combat_bullet import *
 from modules.combat_obs import *
 from modules.combat_score import *
 import random
-rnd_x = random.randint(15,960)
-rnd_y = random.randint(115,660)
+
+rnd_x = random.randint(15, 960)
+rnd_y = random.randint(115, 660)
 
 pygame.init()
 
@@ -47,7 +48,7 @@ obstacles = [
     pygame.Rect(285, 400, 105, 50), pygame.Rect(660, 400, 105, 50),
     pygame.Rect(500, 545, 50, 105), pygame.Rect(500, 200, 50, 105),
     pygame.Rect(0, 95, 1060, 30), pygame.Rect(0, 720, 1060, 30),
-    pygame.Rect(0, 95, 25, 700), pygame.Rect(1025,95, 25, 700)
+    pygame.Rect(0, 95, 25, 700), pygame.Rect(1025, 95, 25, 700)
     ]
 
 wall_right = [
@@ -62,8 +63,8 @@ wall_left = [
 
 
 # score
-score_1, score_2 = 0,0
-count_1, count_2 = 5,5 
+score_1, score_2 = 0, 0
+count_1, count_2 = 5, 5
 
 bullet_group_1 = pygame.sprite.Group()
 bullet_group_2 = pygame.sprite.Group()
@@ -79,7 +80,7 @@ while game_loop:
         if event.type == pygame.QUIT:
             game_loop = False
         if event.type == pygame.KEYDOWN:
-            #player_1 controls
+            # player_1 controls
             if event.key == pygame.K_d:
                 player_1.rotate_left = True
             if event.key == pygame.K_a:
@@ -89,7 +90,7 @@ while game_loop:
             if event.key == pygame.K_c:
                 if len(bullet_group_2) < 1:
                     bullet_group_2.add(player_1.create_bullet(ball_1_image))
-            #player_2 controls
+            # player_2 controls
             if event.key == pygame.K_LEFT:
                 player_2.rotate_right = True
             if event.key == pygame.K_RIGHT:
@@ -100,14 +101,14 @@ while game_loop:
                 if len(bullet_group_1) < 1:
                     bullet_group_1.add(player_2.create_bullet(ball_2_image))
         if event.type == pygame.KEYUP:
-            #player_1 controls
+            # player_1 controls
             if event.key == pygame.K_d:
                 player_1.rotate_left = False
             if event.key == pygame.K_a:
                 player_1.rotate_right = False
             if event.key == pygame.K_w:
                 player_1.forward = False
-            #player_2 controls
+            # player_2 controls
             if event.key == pygame.K_LEFT:
                 player_2.rotate_right = False
             if event.key == pygame.K_RIGHT:
@@ -116,9 +117,8 @@ while game_loop:
                 player_2.forward = False
 
     rnd_x, rnd_y = 0, 0
-    rnd_x = random.randint(15,960)
-    rnd_y = random.randint(115,660)
-    # player 1 movement 
+    # player 1 movement
+
     player_1.movement()
     player_2.movement()
     
@@ -185,10 +185,8 @@ while game_loop:
                 player_1.rect.left = walls.right
                 player_1.pos = pygame.Vector2(player_1.rect.center)
 
-    
     score_1_text.scoring(score_1, screen, COLOR_GREEN, 150, 15)
     score_1_text.scoring(score_2, screen,  COLOR_PURPLE, 775, 15)
-    
     bullet_group_1.draw(screen)
     bullet_group_1.update()
     bullet_group_2.draw(screen)
@@ -231,7 +229,7 @@ while game_loop:
                     bullet.rect.bottom = i.top + 50
         collide_2 = pygame.Rect.colliderect(player_1.rect, bullet.rect)
         if collide_2:
-            score_2 +=1
+            score_2 += 1
             bullet.kill()
             player_1.rect.center = round(rnd_x), round(rnd_y)
             player_1.pos = pygame.Vector2(player_1.rect.center)
@@ -273,7 +271,7 @@ while game_loop:
                     bullet.rect.bottom = i.top + 50
         collide_1 = pygame.Rect.colliderect(player_2.rect, bullet.rect)
         if collide_1:
-            score_1 +=1
+            score_1 += 1
             bullet.kill()
             player_2.rect.center = round(rnd_x), round(rnd_y)
             player_2.pos = pygame.Vector2(player_2.rect.center)
