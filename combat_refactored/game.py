@@ -3,7 +3,7 @@ from sqlite3 import Time
 from time import time
 import pygame
 from bullet import Bullet
-from config import SCREEN_RECTS, SCREEN_RECTS_2, TANK_1_COLOR, TANK_2_COLOR
+from config import SCREEN_RECTS, TANK_1_COLOR, TANK_2_COLOR
 from screen import Screen
 from tank import Tank
 
@@ -16,7 +16,7 @@ class Game:
         self.score = (0, 0)
 
         self.clock = pygame.time.Clock()
-        self.map = SCREEN_RECTS
+        self.map = 2*SCREEN_RECTS
         self.tank1 = Tank((45, 243), TANK_1_COLOR, pygame.K_LEFT,
                           pygame.K_UP, pygame.K_RIGHT, pygame.K_DOWN,
                           pygame.K_SPACE)
@@ -40,7 +40,7 @@ class Game:
 
         if self.tank2.has_shooted_enemy() and not self.tank1.spin:
             self.tank1.spin = True
-            self.score = (self.score[0], self.score[1] + 1)
+            self.score = (self.score[0], self.score[1]+1)
 
     def loop(self):
         while self.playing:
