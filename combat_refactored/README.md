@@ -5,6 +5,16 @@ Released in 1977, “Combat” was one of nine games released with the Atari 260
 
 <a href="https://github.com/JupiterIvy"><img src="https://user-images.githubusercontent.com/65917017/217365957-7e7c30db-d92e-4895-82bf-fad1a480860a.png" width="300px;" alt=""/></a>
 
+# CONTRIBUTORS
+<table>
+<tr>
+    <td align="center"><a href="https://github.com/JupiterIvy"><img src="https://media.licdn.com/dms/image/D4D03AQHt30NNq_kSvQ/profile-displayphoto-shrink_400_400/0/1670128148472?e=1677110400&v=beta&t=0qSqk2zVgjYNNHqF8_p3BtYed18SuSrGcR6_Obe7vIU" width="100px;" alt=""/><br /><sub><b>Evelyn Bessa</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/JuanCarloPaes"><img src="https://avatars.githubusercontent.com/u/46506431?v=4" width="100px;" alt=""/><br /><sub><b>Juan Paes</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/sweilos"><img src="https://avatars.githubusercontent.com/u/54459008?v=4" width="100px;" alt=""/><br /><sub><b>Yago Nunes</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/giseledesa"><img src="https://avatars.githubusercontent.com/u/120344151?v=4" width="100px;" alt=""/><br /><sub><b>Gisele de Sá</b></sub></a><br /></td>
+    
+</table>
+
 ## Goals
 
 The objective of the game is to hit the opposing player's tank with as many shots as possible, so that one player has enough hit advantage over the other to win the match.
@@ -50,12 +60,3 @@ self.map = 2*SCREEN_RECTS_2
 
 Enjoy.
 
-# CONTRIBUTORS
-<table>
-<tr>
-    <td align="center"><a href="https://github.com/JupiterIvy"><img src="https://media.licdn.com/dms/image/D4D03AQHt30NNq_kSvQ/profile-displayphoto-shrink_400_400/0/1670128148472?e=1677110400&v=beta&t=0qSqk2zVgjYNNHqF8_p3BtYed18SuSrGcR6_Obe7vIU" width="100px;" alt=""/><br /><sub><b>Evelyn Bessa</b></sub></a><br /></td>
-    <td align="center"><a href="https://github.com/JuanCarloPaes"><img src="https://avatars.githubusercontent.com/u/46506431?v=4" width="100px;" alt=""/><br /><sub><b>Juan Paes</b></sub></a><br /></td>
-    <td align="center"><a href="https://github.com/sweilos"><img src="https://avatars.githubusercontent.com/u/54459008?v=4" width="100px;" alt=""/><br /><sub><b>Yago Nunes</b></sub></a><br /></td>
-    <td align="center"><a href="https://github.com/giseledesa"><img src="https://avatars.githubusercontent.com/u/120344151?v=4" width="100px;" alt=""/><br /><sub><b>Gisele de Sá</b></sub></a><br /></td>
-    
-</table>
