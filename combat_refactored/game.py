@@ -3,26 +3,29 @@ from sqlite3 import Time
 from time import time
 import pygame
 from bullet import Bullet
-from config import SCREEN_RECTS, TANK_1_COLOR, TANK_2_COLOR
+from config import SCREEN_RECTS, TANK_1_COLOR, TANK_2_COLOR, SPEED, TOP_BAR_HEIGHT
 from screen import Screen
 from tank import Tank
+import json, os
 
 
 class Game:
     def __init__(self) -> None:
-
         self.playing = True
         self.screen = Screen()
         self.score = (0, 0)
-
+        with open(os.path.join("ps4.json"), 'r+') as file:
+            button_keys = json.load(file)
+        
         self.clock = pygame.time.Clock()
         self.map = 2*SCREEN_RECTS
+        
         self.tank1 = Tank((45, 243), TANK_1_COLOR, pygame.K_LEFT,
                           pygame.K_UP, pygame.K_RIGHT, pygame.K_DOWN,
                           pygame.K_SPACE)
-        self.tank2 = Tank((710, 243), TANK_2_COLOR, pygame.K_a,
-                          pygame.K_w, pygame.K_d, pygame.K_s, pygame.K_q)
-
+        self.tank2 = Tank((710, 243), TANK_2_COLOR, button_keys['left_arrow'],
+                          button_keys['up_arrow'], button_keys['right_arrow'],button_keys['down_arrow'],  button_keys['x'])
+        
     def listen_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -33,7 +36,6 @@ class Game:
             self.map, self.tank2.get_rect())
         self.tank2.move(
             self.map, self.tank1.get_rect())
-
         if self.tank1.has_shooted_enemy() and not self.tank2.spin:
             self.tank2.spin = True
             self.score = (self.score[0] + 1, self.score[1])
@@ -44,8 +46,8 @@ class Game:
 
     def loop(self):
         while self.playing:
-            self.listen_events()
             self.listen_keyboard()
+            self.listen_events()
 
             self.screen.draw(self.map, self.score)
             self.tank1.draw(self.screen.arena)

@@ -1,7 +1,7 @@
 import random
 import pygame
 from bullet import Bullet
-
+import json, os
 from config import SPEED, TOP_BAR_HEIGHT
 
 
@@ -15,6 +15,11 @@ class Tank:
             "img/tank.png")
         self.tank_sprite.fill(color, None, pygame.BLEND_MAX)
         self.color = color
+        self.joysticks = []
+        for i in range(pygame.joystick.get_count()):
+            self.joysticks.append(pygame.joystick.Joystick(i))
+        for joystick in self.joysticks:
+            joystick.init()
         self.tank_angle = 0
         self.x = initial_coord[0]
         self.y = initial_coord[1]
@@ -22,13 +27,45 @@ class Tank:
         self.x_velocity = 0
         self.y_velocity = 0
         self.angle = 0
+        with open(os.path.join("ps4.json"), 'r+') as file:
+            self.button_keys = json.load(file)
+        self.LEFT, self.RIGHT, self.UP, self.DOWN, self.SHOOT = False, False, False, False, False
+        self.analog_keys = {0:0, 1:0, 2:0, 3:0, 4:-1, 5: -1 }
+        self.j_right, self.j_left,self.j_up,self.j_down,self.j_shoot = 0,0,0,0,0
 
-        self.key_up = key_up
-        self.key_down = key_down
-        self.key_right = key_right
-        self.key_left = key_left
-        self.key_shoot = key_shoot
-
+        for i in self.button_keys.keys():
+            button = self.button_keys[i]
+            if button == key_down:
+                self.j_down = key_down
+                self.key_down = None
+            else:
+                self.key_down = key_down
+                self.j_down = None
+            if button == key_up:
+                self.j_up = key_up
+                self.key_up = None
+            else:
+                self.key_up = key_up
+                self.j_up = None
+            if button == key_right:
+                self.j_right = key_right
+                self.key_right = None
+            else:
+                self.key_right = key_right
+                self.j_right = None
+            if button == key_left:
+                self.j_left = key_left
+                self.key_left = None
+            else:
+                self.j_left = None
+                self.key_left = key_left
+            if button == key_shoot:
+                self.j_shoot = key_shoot
+                self.key_shoot = None
+            else:
+                self.j_shoot = None
+                self.key_shoot = key_shoot
+        
         self.bullet = None
         self.shooted = False
         self.spin = False
@@ -38,6 +75,73 @@ class Tank:
         self.sound_move = pygame.mixer.Sound("sound/move.mp3")
         self.sound_explosion = pygame.mixer.Sound("sound/explosion.mp3")
         self.sound_move.set_volume(0.6)
+    
+    def listen_joystick(self):
+        for event in pygame.event.get():
+            if event.type == pygame.JOYBUTTONDOWN:
+                if event.button == self.key_left:
+                    self.LEFT = True
+                if event.button == self.key_right:
+                    self.RIGHT = True
+                if event.button == self.key_down:
+                    self.DOWN = True
+                if event.button == self.key_up:
+                    self.UP = True
+                if event.button == self.key_shoot:
+                    self.SHOOT = True
+            if event.type == pygame.JOYBUTTONUP:
+                if event.button == self.key_left:
+                    self.LEFT = False
+                if event.button == self.key_right:
+                    self.RIGHT = False
+                if event.button == self.key_down:
+                    self.DOWN = False
+                if event.button == self.key_up:
+                    self.UP = False
+                if event.button == self.key_shoot:
+                    self.SHOOT = False
+
+            if event.type == pygame.JOYAXISMOTION:
+                self.analog_keys[event.axis] = event.value
+                # print(analog_keys)
+                # Horizontal Analog
+            if abs(self.analog_keys[0]) > .4:
+                if self.analog_keys[0] < -.7:
+                    self.LEFT = True
+                else:
+                    self.LEFT = False
+                if self.analog_keys[0] > .7:
+                    self.RIGHT = True
+                else:
+                    self.RIGHT = False
+                # Vertical Analog
+            if abs(self.analog_keys[1]) > .4:
+                if self.analog_keys[1] < -.7:
+                    self.UP = True
+                else:
+                    self.UP = False
+                if self.analog_keys[1] > .7:
+                    self.DOWN = True
+                else:
+                    self.DOWN = False
+        if self.LEFT:
+            self.angle += 4
+        if self.RIGHT:
+            self.angle -= 4
+        if self.UP:
+            self.direction = -1
+        if self.DOWN:
+            self.direction = 1
+        if self.SHOOT:
+            if not self.shooted and self.bullet is None:
+                pygame.mixer.Channel(3).play(self.sound_shot)
+                self.bullet = Bullet(self.x + self.size / 2,
+                                     self.y + self.size /
+                                     2, -self.x_velocity / SPEED,
+                                     -self.y_velocity / SPEED)
+            self.shooted = True
+        else:
+            self.shooted = False
 
     def listen_keyboard(self):
         key = pygame.key.get_pressed()
@@ -82,8 +186,11 @@ class Tank:
     def move(self, map, enemy_rect):
         self.direction = 0
         if not self.spin:
-            self.listen_keyboard()
-
+            for i in self.joysticks:
+                if i.get_button(0) == self.key_shoot:
+                    self.listen_joystick()
+                else:
+                    self.listen_keyboard()
         if self.angle > 360:
             self.angle = 0
         elif self.angle < 0:
