@@ -10,14 +10,13 @@ class Screen:
     
     def __init__(self) -> None:
         self.surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        self.battery_sprite = pygame.image.load("img/battery.png")
-        self.battery_sprite = pygame.transform.scale(self.battery_sprite, (53, 43))
         self.font = pygame.font.Font("font/pixel_lcd_7.ttf", 30)
+        self.victory_font = pygame.font.Font("font/Megafont.ttf", 30)
         self.vignette = pygame.image.load("img/vignette.png")
         self.vignette = pygame.transform.scale(self.vignette, (800,780))
         self.timer = pygame.image.load("img/timer.png")
         self.timer = pygame.transform.scale(self.timer, (150,125))
-        self.battery_count = pygame.image.load("img/battery2.png")
+        self.battery_count = pygame.image.load("img/battery.png")
         self.battery_count = pygame.transform.scale(self.battery_count, (65, 60))
         self.output_string = ""
         self.map_loader = MapLoader()
@@ -26,11 +25,37 @@ class Screen:
         self.shader = []
         self.tiles = []
         self.map = []
-        self.map = self.map_loader.load("map.txt")
-        self.shader = self.shader_loader.load("shader.txt")
+        self.map = self.map_loader.load("map/map.txt")
+        self.shader = self.shader_loader.load("map/shader.txt")
         self.floor = pygame.Rect(40, 150, 720, 600)
-        self.door = pygame.Rect(340, 130, 120, 20)
         
+    def countdown_timer(self):
+        total_seconds = self.frame_count // self.frame_rate
+        minutes = total_seconds // 60
+        seconds = total_seconds % 60
+        output_string = "{0:02}:{1:02}".format(minutes, seconds)
+        if total_seconds < 0:
+            total_seconds = 0
+        self.frame_count += 1
+        return output_string
+    
+    def victory(self, route, index):
+        if route == 'Tripulant':
+            vic_string = "{} Won!".format(route)
+            hunter_victory = self.victory_font.render(vic_string, True, WHITE_COLOR)
+            self.surface.blit(hunter_victory, (250,400))
+            self.frame_count = 0
+        if route == 'Invader' and index is None:
+            vic_string = "{}s Won!".format(route)
+            hunter_victory = self.victory_font.render(vic_string, True, WHITE_COLOR)
+            self.surface.blit(hunter_victory, (250,400))
+            self.frame_count = 0
+        if route == 'Invader' and index is not None:
+            vic_string = "{} {} Won!".format(route, index)
+            hunter_victory = self.victory_font.render(vic_string, True, WHITE_COLOR)
+            self.surface.blit(hunter_victory, (250,400))
+            self.frame_count = 0
+
     def draw(self, map, score):
         self.surface.fill(BLACK_COLOR)
         pygame.draw.rect(self.surface, BG_COLOR, self.floor, 0)
@@ -57,19 +82,11 @@ class Screen:
         self.surface.blit(self.timer, (332, 0))
         self.surface.blit(self.battery_count, (605, 27))
         self.surface.blit(count_timer, (355,40))
-        pygame.draw.rect(self.surface, (215, 56, 64), self.door, 0)
-
+        
         score_players = self.font.render(
             str(score), True, WHITE_COLOR)
         self.surface.blit(score_players, (660, 40))
-        
-    def countdown_timer(self):
-        total_seconds = self.frame_count // self.frame_rate
-        minutes = total_seconds // 60
-        seconds = total_seconds % 60
-        output_string = "{0:02}:{1:02}".format(minutes, seconds)
-        if total_seconds < 0:
-            total_seconds = 0
-        self.frame_count += 1
-        return output_string
+    
 
+
+    

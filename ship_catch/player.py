@@ -6,18 +6,20 @@ from config import SPEED, TOP_BAR_HEIGHT
 
 class Player:
     collided_player = False
+    collided_door = False
     size = 45
     pygame.mixer.init()
     elapsed = 0
     def __init__(self, initial_coord, color, key_left, key_up, key_right,
                  key_down, route):
-        print(route)
-        if route == 'hunter':
+        self.speed = SPEED
+        if route == 'Tripulant':
             self.player_sprite = pygame.image.load(
                 "img/killer_all.png")
-        elif route == 'player':
+            self.speed += 0.5
+        elif route == 'Invader':
             self.player_sprite = pygame.image.load(
-                "img/player_all2.png")
+                "img/player_all.png")
             self.color = color
             #self.player_sprite.fill(color, None, pygame.BLEND_MAX)
         self.joysticks = []
@@ -35,14 +37,13 @@ class Player:
         self.angle = 0
         with open(os.path.join("ps4.json"), 'r+') as file:
             self.button_keys = json.load(file)
-        self.LEFT, self.RIGHT, self.UP, self.DOWN= False, False, False, False
+        self.LEFT, self.RIGHT, self.UP, self.DOWN = False, False, False, False
         self.analog_keys = {0:0, 1:0, 2:0, 3:0, 4:-1, 5: -1 }
-        self.j_right, self.j_left,self.j_up,self.j_down = 0,0,0,0
         self.key_down = key_down
         self.key_left = key_left
         self.key_right = key_right
         self.key_up = key_up
-        
+        self.dead = False
         self.sound_shot = pygame.mixer.Sound("sound/shot.mp3")
         self.sound_move = pygame.mixer.Sound("sound/move.mp3")
         self.sound_explosion = pygame.mixer.Sound("sound/explosion.mp3")
@@ -124,35 +125,36 @@ class Player:
             self.angle = 270
             self.direction = -1
         else:
-            if self.running == False:
+            if self.running == False and not self.dead:
                 self.animate_idle()
 
     def listen_keyboard(self):
         key = pygame.key.get_pressed()
-        if key[self.key_left]:
-            self.angle = 180
-            self.animate_run()
-            self.direction = -1
-        elif key[self.key_down]:
-            self.animate_run()
-            self.angle = 270
-            self.direction = -1
-        elif key[self.key_right]:
-            self.animate_run()
-            self.angle = 0
-            self.direction = -1
-        elif key[self.key_up]:
-            self.animate_run()
-            self.angle = 90
-            self.direction = -1
-        else:
-            self.animate_idle()
+        if not self.dead:
+            if key[self.key_left]:
+                self.angle = 180
+                self.animate_run()
+                self.direction = -1
+            elif key[self.key_down]:
+                self.animate_run()
+                self.angle = 270
+                self.direction = -1
+            elif key[self.key_right]:
+                self.animate_run()
+                self.angle = 0
+                self.direction = -1
+            elif key[self.key_up]:
+                self.animate_run()
+                self.angle = 90
+                self.direction = -1
+            else:
+                self.animate_idle()
 
     def colliding_rects(self, rects):
         rect = pygame.Rect(self.x + (self.x_velocity * self.direction),
                            self.y + (self.y_velocity * self.direction),
                            self.size, self.size)
-
+                           
         if rect.collidelist(rects) < 0:
             self.x += self.x_velocity * self.direction
             self.y += self.y_velocity * self.direction
@@ -167,14 +169,15 @@ class Player:
             self.player_angle = 0
 
     def animate_death(self):
-        self.elapsed += 1
-        if self.elapsed == 5:
-            self.player_angle += 1
-        if self.elapsed > 5:
-            self.elapsed = 0
         self.player_angle = 6
+        self.elapsed += 1
+        if self.elapsed == 7:
+            self.player_angle += 1
+        if self.elapsed > 7:
+            self.elapsed = 0
+        if self.player_angle > 13:
+            self.player_angle = 13
         
-
     def animate_run(self):
         if self.x_velocity == 0 or self.y_velocity == 0:
             self.elapsed += 1
@@ -187,36 +190,38 @@ class Player:
 
     def move(self, map, enemy_rect, joy_number):
         self.direction = 0
-        for i in self.joysticks:
-            if i.get_instance_id() == joy_number:
-                self.listen_joystick()
-            else:
-                self.listen_keyboard()
-
+        if not self.dead:
+            for i in self.joysticks:
+                if i.get_instance_id() == joy_number:
+                    self.listen_joystick()
+                else:
+                    self.listen_keyboard()
         if self.angle > 360:
             self.angle = 0
         elif self.angle < 0:
             self.angle = 360
 
         if self.angle == 0:
-            self.x_velocity = SPEED
+            self.x_velocity = self.speed
             self.y_velocity = 0
         elif self.angle == 180:
-            self.x_velocity = SPEED
+            self.x_velocity = self.speed
             self.y_velocity = 0
         elif self.angle == 90:
             self.x_velocity = 0
-            self.y_velocity = SPEED
+            self.y_velocity = self.speed
         else:
             self.x_velocity = 0
-            self.y_velocity = SPEED
+            self.y_velocity = self.speed
 
         if self.angle <= 90 or self.angle >= 270:
             self.x_velocity = -self.x_velocity
 
         if self.angle > 180:
             self.y_velocity = -self.y_velocity
-        
+
+        if self.dead:
+            self.animate_death()
         self.colliding_rects(map + [enemy_rect])
         self.is_colliding_player(enemy_rect)
 
@@ -230,19 +235,24 @@ class Player:
 
     def get_rect(self):
         return (self.x, self.y, self.size, self.size)
-
+    
     def get_coord(self):
         return (self.x, self.y)
 
     def draw(self, surface: pygame.Surface):
         surface.blit(self.get_image(), self.get_coord())
 
-
     def is_colliding_player(self, player_rect):
         self.collided_player = pygame.Rect(self.x + (self.x_velocity * self.direction),
                            self.y + (self.y_velocity * self.direction),
                            self.size, self.size).colliderect(player_rect)
         return self.collided_player
+    
+    def is_colliding_door(self, door_rect):
+        self.collided_door = pygame.Rect(self.x + (self.x_velocity * self.direction),
+                           self.y + (self.y_velocity * self.direction),
+                           self.size, self.size).colliderect(door_rect)
+        return self.collided_door
     
     def has_touched_enemy(self):
         if self.collided_player:
