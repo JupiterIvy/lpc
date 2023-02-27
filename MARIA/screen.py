@@ -1,25 +1,75 @@
 import pygame
 from config import *
+from map import MapLoader
 
 color = 0
 class Screen:
-    surface: pygame.Surface
+    frame_count = 0
+    frame_rate = 60
+    start_time = 90
     
     def __init__(self) -> None:
-        self.surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT),pygame.RESIZABLE)
-        self.font = pygame.font.Font("font/Megafont.ttf", 54)
-
+        self.surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.battery_sprite = pygame.image.load("img/battery.png")
+        self.battery_sprite = pygame.transform.scale(self.battery_sprite, (53, 43))
+        self.font = pygame.font.Font("font/pixel_lcd_7.ttf", 30)
+        self.vignette = pygame.image.load("img/vignette.png")
+        self.vignette = pygame.transform.scale(self.vignette, (800,780))
+        self.timer = pygame.image.load("img/timer.png")
+        self.timer = pygame.transform.scale(self.timer, (150,125))
+        self.battery_count = pygame.image.load("img/battery2.png")
+        self.battery_count = pygame.transform.scale(self.battery_count, (65, 60))
+        self.output_string = ""
+        self.map_loader = MapLoader()
+        self.shader_loader = MapLoader()
+        self.tiles = MapLoader()
+        self.shader = []
+        self.tiles = []
+        self.map = []
+        self.map = self.map_loader.load("map.txt")
+        self.shader = self.shader_loader.load("shader.txt")
+        self.floor = pygame.Rect(40, 150, 720, 600)
+        self.door = pygame.Rect(340, 130, 120, 20)
+        
     def draw(self, map, score):
-        self.surface.fill(BG_COLOR)
-        for x in range(0, SCREEN_WIDTH, BLOCK_SIZE):
-            for y in range(0, SCREEN_HEIGHT, BLOCK_SIZE):
+        self.surface.fill(BLACK_COLOR)
+        pygame.draw.rect(self.surface, BG_COLOR, self.floor, 0)
+        for x in range(20, 741, BLOCK_SIZE):
+            for y in range(150, 750, BLOCK_SIZE):
                 grid_shader = pygame.Rect(x, y, BLOCK_SIZE, BLOCK_SIZE)
                 pygame.draw.rect(self.surface, GRID_SHADER, grid_shader, 4)
                 grid_back = pygame.Rect(x, y, BLOCK_SIZE, BLOCK_SIZE)
                 pygame.draw.rect(self.surface, GRID_COLOR, grid_back, 2)
                 grid_light = pygame.Rect(x, y, BLOCK_SIZE, BLOCK_SIZE)
                 pygame.draw.rect(self.surface, GRID_LIGHT, grid_light, 1)
-        for border in map:
-            pygame.draw.rect(self.surface, RECTS_COLOR, border)
-        top_bar = pygame.Rect(0, 0, SCREEN_WIDTH, 70)
+        #for border in map:
+        #   pygame.draw.rect(self.surface, RECTS_COLOR, border)
+        for i in self.shader:
+            pygame.draw.rect(self.surface, SHADER_COLOR, i, 10)
+        for rect in map:
+            pygame.draw.rect(self.surface, MAP_COLOR, rect, 10)
+            
+        top_bar = pygame.Rect(0, 0, SCREEN_WIDTH, 90)
         pygame.draw.rect(self.surface, BLACK_COLOR, top_bar, 100)
+        self.output_string = self.countdown_timer()
+        count_timer = self.font.render(self.output_string, True, TIMER_COLOR)
+        self.surface.blit(self.vignette, (0, 40))
+        self.surface.blit(self.timer, (332, 0))
+        self.surface.blit(self.battery_count, (605, 27))
+        self.surface.blit(count_timer, (355,40))
+        pygame.draw.rect(self.surface, (215, 56, 64), self.door, 0)
+
+        score_players = self.font.render(
+            str(score), True, WHITE_COLOR)
+        self.surface.blit(score_players, (660, 40))
+        
+    def countdown_timer(self):
+        total_seconds = self.frame_count // self.frame_rate
+        minutes = total_seconds // 60
+        seconds = total_seconds % 60
+        output_string = "{0:02}:{1:02}".format(minutes, seconds)
+        if total_seconds < 0:
+            total_seconds = 0
+        self.frame_count += 1
+        return output_string
+
