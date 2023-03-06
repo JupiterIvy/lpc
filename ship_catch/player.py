@@ -8,18 +8,18 @@ class Player:
     collided_player = False
     collided_door = False
     size = 45
-    pygame.mixer.init()
+   
     elapsed = 0
     def __init__(self, initial_coord, color, key_left, key_up, key_right,
                  key_down, route):
         self.speed = SPEED
         if route == 'Tripulant':
             self.player_sprite = pygame.image.load(
-                "img/killer_all.png")
-            self.speed += 0.5
+                "img/killer_all2.png").convert_alpha()
+            self.speed += 0.1
         elif route == 'Invader':
             self.player_sprite = pygame.image.load(
-                "img/player_all.png")
+                "img/player_all.png").convert_alpha()
             self.color = color
             #self.player_sprite.fill(color, None, pygame.BLEND_MAX)
         self.joysticks = []
@@ -27,7 +27,7 @@ class Player:
             self.joysticks.append(pygame.joystick.Joystick(i))
         for joystick in self.joysticks:
             joystick.init()
-        self.player_angle = 8
+        self.player_angle = 0
         self.x = initial_coord[0]
         self.y = initial_coord[1]
         self.direction = 1
@@ -44,10 +44,7 @@ class Player:
         self.key_right = key_right
         self.key_up = key_up
         self.dead = False
-        self.sound_shot = pygame.mixer.Sound("sound/shot.mp3")
-        self.sound_move = pygame.mixer.Sound("sound/move.mp3")
-        self.sound_explosion = pygame.mixer.Sound("sound/explosion.mp3")
-        self.sound_move.set_volume(0.6)
+
     
     def listen_joystick(self):
         for event in pygame.event.get():
@@ -196,6 +193,7 @@ class Player:
                     self.listen_joystick()
                 else:
                     self.listen_keyboard()
+                    
         if self.angle > 360:
             self.angle = 0
         elif self.angle < 0:

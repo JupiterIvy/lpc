@@ -1,4 +1,5 @@
 import pygame
+from pygame.locals import *
 from config import *
 from map import MapLoader
 
@@ -9,26 +10,32 @@ class Screen:
     start_time = 90
     
     def __init__(self) -> None:
-        self.surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.DOUBLEBUF)
         self.font = pygame.font.Font("font/pixel_lcd_7.ttf", 30)
         self.victory_font = pygame.font.Font("font/Megafont.ttf", 30)
-        self.vignette = pygame.image.load("img/vignette.png")
-        self.vignette = pygame.transform.scale(self.vignette, (800,780))
-        self.timer = pygame.image.load("img/timer.png")
-        self.timer = pygame.transform.scale(self.timer, (150,125))
-        self.battery_count = pygame.image.load("img/battery.png")
-        self.battery_count = pygame.transform.scale(self.battery_count, (65, 60))
         self.output_string = ""
+        self.timer = pygame.image.load("img/timer.png").convert_alpha()
+        self.timer = pygame.transform.scale(self.timer, (150,125))
+        self.battery_count = pygame.image.load("img/battery.png").convert_alpha()
+        self.battery_count = pygame.transform.scale(self.battery_count, (65, 60))
+        pass
+
+    def ambiency(self):
+        self.vignette = pygame.image.load("img/vignette.png").convert_alpha()
+        self.ambient = pygame.image.load("img/ambient2.png").convert_alpha()
+        self.filter = pygame.image.load("img/twilight_filter.png").convert_alpha()
+        self.ambient = pygame.transform.scale(self.ambient, (790,790))
+        self.filter = pygame.transform.scale(self.filter, (790,790))
+        self.vignette = pygame.transform.scale(self.vignette, (800,780))
         self.map_loader = MapLoader()
         self.shader_loader = MapLoader()
-        self.tiles = MapLoader()
         self.shader = []
         self.tiles = []
         self.map = []
         self.map = self.map_loader.load("map/map.txt")
         self.shader = self.shader_loader.load("map/shader.txt")
         self.floor = pygame.Rect(40, 150, 720, 600)
-        
+
     def countdown_timer(self):
         total_seconds = self.frame_count // self.frame_rate
         minutes = total_seconds // 60
@@ -57,6 +64,7 @@ class Screen:
             self.frame_count = 0
 
     def draw(self, map, score):
+        self.ambiency()
         self.surface.fill(BLACK_COLOR)
         pygame.draw.rect(self.surface, BG_COLOR, self.floor, 0)
         for x in range(20, 741, BLOCK_SIZE):
@@ -67,18 +75,17 @@ class Screen:
                 pygame.draw.rect(self.surface, GRID_COLOR, grid_back, 2)
                 grid_light = pygame.Rect(x, y, BLOCK_SIZE, BLOCK_SIZE)
                 pygame.draw.rect(self.surface, GRID_LIGHT, grid_light, 1)
-        #for border in map:
-        #   pygame.draw.rect(self.surface, RECTS_COLOR, border)
         for i in self.shader:
             pygame.draw.rect(self.surface, SHADER_COLOR, i, 10)
         for rect in map:
             pygame.draw.rect(self.surface, MAP_COLOR, rect, 10)
-            
         top_bar = pygame.Rect(0, 0, SCREEN_WIDTH, 90)
         pygame.draw.rect(self.surface, BLACK_COLOR, top_bar, 100)
         self.output_string = self.countdown_timer()
         count_timer = self.font.render(self.output_string, True, TIMER_COLOR)
+        self.surface.blit(self.ambient, (0, 40))
         self.surface.blit(self.vignette, (0, 40))
+        self.surface.blit(self.filter, (0, 40))
         self.surface.blit(self.timer, (332, 0))
         self.surface.blit(self.battery_count, (605, 27))
         self.surface.blit(count_timer, (355,40))

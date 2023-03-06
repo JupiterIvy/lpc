@@ -43,6 +43,7 @@ class Game:
         self.players.update({1: self.player2})
         self.players.update({2: self.player3})
 
+    
     def listen_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -85,8 +86,8 @@ class Game:
         total_seconds = self.screen.frame_count // self.screen.frame_rate
         minutes = total_seconds // 60
         index = None
-        if minutes < 3:
-            if self.death_count >= 2:
+        if minutes < 2:
+            if self.death_count >= len(self.players):
                 self.screen.victory(self.hunter, None)
                 for player in self.players:
                     self.players[player].speed = 0
@@ -97,13 +98,13 @@ class Game:
                 for player in self.players:
                     self.players[player].speed = 0
                 self.tripulant.speed = 0
-            if len(self.exit) == 2:
+            if len(self.exit) == len(self.players):
                 self.screen.victory(self.player, None)
                 for player in self.players:
                     self.players[player].speed = 0
                 self.tripulant.speed = 0
             
-        elif minutes >= 3:
+        elif minutes >= 2:
             self.screen.victory(self.hunter, None)
             for player in self.players:
                 self.players[player].speed = 0

@@ -7,11 +7,11 @@ from config import SPEED, TOP_BAR_HEIGHT
 class Battery:
     collided_player = False
     size = 45
-    pygame.mixer.init()
+    
     elapsed = 0
     def __init__(self,rect):
         self.Battery_sprite = pygame.image.load(
-                "img/battery_all.png")
+                "img/battery_all.png").convert_alpha()
         self.Battery_angle = 0
         self.random_pos(rect)
     
