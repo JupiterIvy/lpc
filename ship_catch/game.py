@@ -27,7 +27,7 @@ class Game:
         self.map = []
         self.map = self.map_loader.load("map/map.txt")
         self.goal = []
-        for i in range(5):
+        for i in range(7):
             battery = Battery(self.map)
             self.goal.append(battery)
         self.wall = pygame.Rect(340, 110, 120, 20)
@@ -78,7 +78,7 @@ class Game:
             if (self.goal[i-1].is_colliding_player(self.player3.get_rect())):
                 self.goal.pop(i-1)
                 self.score += 1
-        if self.score == 5:
+        if self.score == 7:
             self.score = 0
             self.map.pop(290)
     

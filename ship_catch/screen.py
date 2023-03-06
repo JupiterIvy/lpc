@@ -10,7 +10,8 @@ class Screen:
     start_time = 90
     
     def __init__(self) -> None:
-        self.surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.DOUBLEBUF)
+        flag = DOUBLEBUF
+        self.surface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), flag, 16)
         self.font = pygame.font.Font("font/pixel_lcd_7.ttf", 30)
         self.victory_font = pygame.font.Font("font/Megafont.ttf", 30)
         self.output_string = ""
@@ -22,15 +23,12 @@ class Screen:
 
     def ambiency(self):
         self.vignette = pygame.image.load("img/vignette.png").convert_alpha()
-        self.ambient = pygame.image.load("img/ambient2.png").convert_alpha()
-        self.filter = pygame.image.load("img/twilight_filter.png").convert_alpha()
+        self.ambient = pygame.image.load("img/ambient3.png").convert_alpha()
         self.ambient = pygame.transform.scale(self.ambient, (790,790))
-        self.filter = pygame.transform.scale(self.filter, (790,790))
         self.vignette = pygame.transform.scale(self.vignette, (800,780))
         self.map_loader = MapLoader()
         self.shader_loader = MapLoader()
         self.shader = []
-        self.tiles = []
         self.map = []
         self.map = self.map_loader.load("map/map.txt")
         self.shader = self.shader_loader.load("map/shader.txt")
@@ -85,7 +83,6 @@ class Screen:
         count_timer = self.font.render(self.output_string, True, TIMER_COLOR)
         self.surface.blit(self.ambient, (0, 40))
         self.surface.blit(self.vignette, (0, 40))
-        self.surface.blit(self.filter, (0, 40))
         self.surface.blit(self.timer, (332, 0))
         self.surface.blit(self.battery_count, (605, 27))
         self.surface.blit(count_timer, (355,40))
