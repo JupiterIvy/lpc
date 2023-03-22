@@ -1,7 +1,7 @@
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 
-TOP_BAR_HEIGHT = 90
+TOP_BAR_HEIGHT = 50
 
 PLAYER_1_COLOR = (137, 199, 76)
 PLAYER_2_COLOR = (71, 83, 207)
@@ -25,4 +25,12 @@ OFFSET_Y = 90
 MAP_RECT_X = 1
 MAP_RECT_Y = 1
 
-SPEED = 4
+SPEED = 3
+
+SCREEN_RECTS = [
+    # Borders
+    (100, 50, 1055, 8),
+    (100, 0, 8, 650),
+    (100, 650, 1055, 8),
+    (1150, 0, 8, 650),
+]
