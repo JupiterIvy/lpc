@@ -1,3 +1,5 @@
+# The cake is a lie
+
 from logging.config import listen
 from sqlite3 import Time
 from time import time
