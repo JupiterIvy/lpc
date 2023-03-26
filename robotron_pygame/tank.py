@@ -241,7 +241,7 @@ class Tank:
         rect = pygame.Rect(self.x + (self.x_velocity * self.direction),
                            self.y + (self.y_velocity * self.direction),
                            self.size, self.size)
-
+        
         if rect.collidelist(rects) < 0:
             self.x += self.x_velocity * self.direction
             self.y += self.y_velocity * self.direction

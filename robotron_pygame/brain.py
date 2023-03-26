@@ -5,16 +5,16 @@ import json, os
 from config import SPEED, TOP_BAR_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT
 
 
-class Grunt:
+class Brain:
     collided_player = False
     size = 30
     speed = 5
     elapsed = 0
     
     def __init__(self, rect):
-        self.grunt_sprite = pygame.image.load(
-                "img/grunt.png").convert_alpha()
-        self.grunt_angle = 0
+        self.brain_sprite = pygame.image.load(
+                "img/brain.png").convert_alpha()
+        self.brain_angle = 0
         self.random_pos(rect)
         self.start_time = 0
         self.end = 0
@@ -33,15 +33,15 @@ class Grunt:
     def animate_idle(self):
         self.elapsed += 1
         if self.elapsed == 10:
-            self.grunt_angle += 1
+            self.brain_angle += 1
         if self.elapsed > 10:
             self.elapsed = 0
-        if self.grunt_angle > 2:
-            self.grunt_angle = 0
+        if self.brain_angle > 11:
+            self.brain_angle = 0
 
     def get_image(self) -> pygame.Surface:
-        sub = self.grunt_sprite.subsurface(
-            (self.grunt_angle * self.size, 0, self.size, self.size))
+        sub = self.brain_sprite.subsurface(
+            (self.brain_angle * self.size, 0, self.size, self.size))
 
         vertical = 0
         horizontal = 0
@@ -53,16 +53,30 @@ class Grunt:
     def get_coord(self):
         return (self.x, self.y)
 
-    def move_toward_player(self, player_coords):
-        dx = player_coords[0] - self.x
-        dy = player_coords[1] - self.y
-        angle = math.atan2(dy, dx)
-        self.start_time += 1
-        if self.start_time == 5: 
-            self.x += self.speed * math.cos(angle)
-            self.y += self.speed * math.sin(angle)
-        if self.start_time > 5:
-            self.start_time = 0
+    def move(self, family, player_coords):
+        target = random.randint(0, len(family) - 1)
+
+        if len(family) > 0:
+            dx = family[target].x - self.x
+            dy = family[target].y - self.y
+            angle = math.atan2(dy, dx)
+            self.start_time += 1
+            if self.start_time == 5:
+                self.x += self.speed * math.cos(angle)
+                self.y += self.speed * math.sin(angle)
+            if self.start_time > 5:
+                self.start_time = 0
+
+        else:
+            dx = player_coords[0] - self.x
+            dy = player_coords[1] - self.y
+            angle = math.atan2(dy, dx)
+            self.start_time += 1
+            if self.start_time == 5:
+                self.x += self.speed * math.cos(angle)
+                self.y += self.speed * math.sin(angle)
+            if self.start_time > 5:
+                self.start_time = 0
 
     def draw(self, surface: pygame.Surface):
         self.animate_idle()
@@ -72,5 +86,3 @@ class Grunt:
         self.collided_player = pygame.Rect(
             self.x, self.y, self.size, self.size).colliderect(player_rect)
         return self.collided_player
-    
-
