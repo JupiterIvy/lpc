@@ -14,6 +14,7 @@ class Hulk:
     def __init__(self, rect):
         self.hulk_sprite = pygame.image.load(
                 "img/hulk.png").convert_alpha()
+        print("oie")
         self.hulk_angle = 0
         self.random_pos(rect)
         self.start_time = 0
