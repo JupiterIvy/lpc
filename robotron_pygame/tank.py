@@ -246,15 +246,15 @@ class Tank:
             self.x += self.x_velocity * self.direction
             self.y += self.y_velocity * self.direction
 
-    def bullet_move(self, map, enemy_rect):
+    def bullet_move(self, map):
         if self.bullet:
             for b in self.bullet:
-                b.move(map, enemy_rect)
+                b.move(map)
                 if b.end_life:
                     index = self.bullet.index(b)
                     self.bullet.pop(index)
 
-    def move(self, map, enemy_rect):
+    def move(self, map):
         self.direction = 0
         if not self.dead:
             self.listen_joystick()
@@ -293,9 +293,8 @@ class Tank:
             self.x_velocity = SPEED
             self.side = 1
 
-        self.colliding_rects(map + [enemy_rect])
-        self.bullet_move(map, enemy_rect)
-
+        self.colliding_rects(map)
+        self.bullet_move(map)
 
     def get_image(self) -> pygame.Surface:
 
@@ -330,9 +329,9 @@ class Tank:
 
                 break
 
-    def has_shooted_enemy(self):
+    def has_shooted_enemy(self, enemy_rect):
         for i in range(len(self.bullet)):
-            if self.bullet and self.bullet[i].collided_tank:
+            if self.bullet and self.bullet[i].collided_enemy(enemy_rect):
                 self.bullet.pop(i)
             return True
         return False

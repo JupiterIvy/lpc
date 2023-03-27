@@ -10,6 +10,7 @@ from grunt import Grunt
 from family import Family
 from hulk import Hulk
 from brain import Brain
+from enforcer import Enforcer
 import json, os
 
 
@@ -35,7 +36,9 @@ class Game:
         for i in range(3):
             h = Hulk(self.map)
             b = Brain(self.map)
+            e = Enforcer(self.map)
             self.enemies.append(h)
+            self.enemies.append(e)
             self.enemies.append(b)
         for i in range(15):
             grunts = Grunt(self.map)
@@ -51,10 +54,12 @@ class Game:
 
     def listen_keyboard(self):
         for e in self.enemies:
-            self.tank1.move(self.map, e.get_rect())
+            self.tank1.move(self.map)
+            if self.tank1.has_shooted_enemy(e.get_rect()):
+                self.score = (self.score + 1)
             if type(e) is Hulk:
-                e.move()
-            elif type(e) is Grunt:
+                e.move(self.map)
+            elif type(e) is Grunt or type(e) is Enforcer:
                 e.move_toward_player(self.tank1.get_coord())
             elif type(e) is Brain:
                 for f in self.family:
@@ -62,8 +67,7 @@ class Game:
 
         for f in self.family:
             f.move()
-        if self.tank1.has_shooted_enemy():
-            self.score = (self.score + 1)
+        
 
     def loop(self):
         while self.playing:
