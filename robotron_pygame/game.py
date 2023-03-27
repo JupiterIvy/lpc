@@ -8,7 +8,7 @@ import math
 from bullet import Bullet
 from config import *
 from screen import Screen
-from tank import Tank
+from player import Player
 from grunt import Grunt
 from family import Family
 from hulk import Hulk
@@ -36,7 +36,7 @@ class Game:
             self.family.append(m)
             self.family.append(f)
             self.family.append(c)
-        for i in range(0):
+        for i in range(2):
             h = Hulk(self.map)
             b = Brain(self.map)
             e = Enforcer(self.map)
@@ -47,7 +47,7 @@ class Game:
             grunts = Grunt(self.map)
             self.enemies.append(grunts)
         
-        self.tank1 = Tank((620, 355), PLAYER_1_COLOR, button_keys['left_arrow'],
+        self.player = Player((620, 355), PLAYER_1_COLOR, button_keys['left_arrow'],
                         button_keys['up_arrow'], button_keys['right_arrow'],button_keys['down_arrow'])
             
     def listen_events(self):
@@ -56,9 +56,9 @@ class Game:
                 self.playing = False
 
     def listen_keyboard(self):
-        self.tank1.move(self.map)
+        self.player.move(self.map)
         for e in self.enemies:
-            if self.tank1.has_shooted_enemy(e.get_rect()) and type(e) is not Hulk:
+            if self.player.has_shooted_enemy(e.get_rect()) and type(e) is not Hulk:
                 index = self.enemies.index(e)
                 self.enemies.pop(index)
                 if type(e) is Grunt:
@@ -74,7 +74,7 @@ class Game:
                         index = self.family.index(f)
                         self.family.pop(index)
             elif type(e) is Grunt or type(e) is Enforcer:
-                e.move_toward_player(self.tank1.get_coord())
+                e.move_toward_player(self.player.get_coord())
             elif type(e) is Brain:
                 if self.family:
                     target = self.family[0]
@@ -88,12 +88,12 @@ class Game:
                             self.family.pop(index)
                     e.move(target)
                 else:
-                    e.move(self.tank1.get_coord())
-            if e.is_colliding_player(self.tank1.get_rect()):
+                    e.move(self.player.get_coord())
+            if e.is_colliding_player(self.player.get_rect()):
                 print("jogador")
 
         for f in self.family:
-            if f.is_colliding_player(self.tank1.get_rect()):
+            if f.is_colliding_player(self.player.get_rect()):
                 index = self.family.index(f)
                 self.family.pop(index)
                 self.family_count += 1000
@@ -102,14 +102,13 @@ class Game:
                     self.family_count = 5000
             f.move()
         
-
     def loop(self):
         while self.playing:
             self.listen_keyboard()
             self.listen_events()
             
             self.screen.draw(self.map, self.score)
-            self.tank1.draw(self.screen.surface)
+            self.player.draw(self.screen.surface)
             for e in self.enemies:
                 e.draw(self.screen.surface)
             for f in self.family:

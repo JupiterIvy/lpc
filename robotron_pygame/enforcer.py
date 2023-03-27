@@ -13,7 +13,7 @@ class Enforcer:
     
     def __init__(self, rect):
         self.enforcer_sprite = pygame.image.load(
-                "img/enforcer.png").convert_alpha()
+                "img/sphereoid.png").convert_alpha()
         self.enforcer_angle = 0
         self.random_pos(rect)
         self.start_time = 0

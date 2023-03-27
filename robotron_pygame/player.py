@@ -5,13 +5,13 @@ import json, os
 from config import SPEED, TOP_BAR_HEIGHT
 
 
-class Tank:
+class Player:
     size = 30
     elapsed = 0
 
     def __init__(self, initial_coord, color, key_left, key_up, key_right,
                  key_down):
-        self.tank_sprite = pygame.image.load(
+        self.player_sprite = pygame.image.load(
             "img/player.png")
         self.joysticks = []
         for i in range(pygame.joystick.get_count()):
@@ -298,7 +298,7 @@ class Tank:
 
     def get_image(self) -> pygame.Surface:
 
-        sub = self.tank_sprite.subsurface(
+        sub = self.player_sprite.subsurface(
             (self.player_angle * self.size, 0, self.size, self.size))
 
         vertical = 0
