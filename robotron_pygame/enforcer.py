@@ -23,6 +23,10 @@ class Sphereoids:
         self.random_pos(rect)
         self.start_time = 0
         self.end = 0
+        self.timer = 0
+        self.clock = random.randint(50, 100)
+        self.enforcer_count = 0
+        self.enforcer_limit = random.randint(2, 4)
         self.corners = [(120, 70),
                         (120, SCREEN_HEIGHT - TOP_BAR_HEIGHT - 70),
                         (SCREEN_WIDTH - 200, SCREEN_HEIGHT - TOP_BAR_HEIGHT - 70),
@@ -79,6 +83,15 @@ class Sphereoids:
         if check_destination(self.rand_coord, self.x, self.y):
             self.rand_coord = random.choice(self.corners)
 
+    def spawn_enforcer(self):
+        self.timer += 1
+
+        if self.timer >= self.clock:
+            self.enforcer_count += 1
+            self.timer = 0
+            self.clock = random.randint(50, 100)
+            return True
+
     def draw(self, surface: pygame.Surface):
         self.animate_idle()
         surface.blit(self.get_image(), self.get_coord())
@@ -88,6 +101,10 @@ class Sphereoids:
             self.x, self.y, self.size, self.size).colliderect(player_rect)
         return self.collided_player
 
+    def kill(self):
+        if self.enforcer_count == self.enforcer_limit:
+            return True
+
 
 class Enforcer:
     collided_player = False
@@ -95,24 +112,14 @@ class Enforcer:
     speed = 5
     elapsed = 0
     
-    def __init__(self, rect):
+    def __init__(self, pos):
         self.enforcer_sprite = pygame.image.load(
                 "img/enforcer.png").convert_alpha()
         self.enforcer_angle = 0
-        self.random_pos(rect)
+        self.x = pos[0]
+        self.y = pos[1]
         self.start_time = 0
         self.end = 0
-    
-    def random_pos(self, rects):
-        while True:
-            x = random.randint(100, SCREEN_WIDTH - 200)
-            y = random.randint(100, SCREEN_HEIGHT - TOP_BAR_HEIGHT - 100)
-
-            rect = pygame.Rect(x, y, self.size, self.size)
-            if rect.collidelist(rects) < 0:
-                self.x = x
-                self.y = y
-                break
 
     def animate_idle(self):
         self.elapsed += 1
