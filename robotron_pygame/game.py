@@ -22,6 +22,7 @@ class Game:
         self.playing = True
         self.screen = Screen()
         self.score = 0
+        self.time = 0
         with open(os.path.join("ps4.json"), 'r+') as file:
             button_keys = json.load(file)
         self.clock = pygame.time.Clock()
@@ -58,6 +59,7 @@ class Game:
                 self.playing = False
 
     def listen_keyboard(self):
+        self.time += 1
         self.player.move(self.map)
         for e in self.enemies:
             if self.player.has_shooted_enemy(e.get_rect()) and type(e) is not Hulk:
@@ -79,8 +81,11 @@ class Game:
                     if f.prog == False:
                         if e.is_colliding_player(f.get_rect()):
                             f.dead = True
-                            index = self.family.index(f)
-                            self.family.pop(index)
+                            if self.time == 15:
+                                index = self.family.index(f)
+                                self.family.pop(index)
+                            if self.time > 15:
+                                self.time = 0
             elif type(e) is Grunt or type(e) is Enforcer or type(e) is Family:
                 e.move_toward_player(self.player.get_coord())
             elif type(e) is Brain:
