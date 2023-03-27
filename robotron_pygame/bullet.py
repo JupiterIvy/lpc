@@ -6,7 +6,7 @@ from config import SPEED
 class Bullet:
     size = 30
     speed = 5
-    collided_tank = False
+    collided_enemy = False
     pygame.mixer.init()
 
     def __init__(self, x, y,  x_direction, y_direction, angle) -> None:
@@ -53,13 +53,12 @@ class Bullet:
                     self.x + self.size <= rect[0] + rect[2]:
                 self.end_life = True
               
-    def is_colliding_tank(self, tank_rect):
-        self.collided_tank = pygame.Rect(
-            self.x, self.y, self.size, self.size).colliderect(tank_rect)
+    def is_colliding_enemy(self, enemy_rect):
+        self.collided_enemy = pygame.Rect(
+            self.x, self.y, self.size, self.size).colliderect(enemy_rect)
 
-    def move(self, map, tank):
+    def move(self, map):
         self.is_colliding_walls(map)
-        self.is_colliding_tank(tank)
 
         self.x += self.x_velocity
         self.y += self.y_velocity
