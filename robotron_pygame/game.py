@@ -29,14 +29,14 @@ class Game:
         self.family_count = 0
         self.enemies = []
         self.family = []
-        for i in range(2):
+        for i in range(5):
             m = Family(self.map, 0)
             f = Family(self.map, 1)
             c = Family(self.map, 2)
             self.family.append(m)
             self.family.append(f)
             self.family.append(c)
-        for i in range(2):
+        for i in range(5):
             h = Hulk(self.map)
             b = Brain(self.map)
             e = Enforcer(self.map)
@@ -45,7 +45,7 @@ class Game:
             self.enemies.append(h)
             self.enemies.append(e)
             self.enemies.append(b)
-        for i in range(15):
+        for i in range(5):
             grunts = Grunt(self.map)
             self.enemies.append(grunts)
         
@@ -65,6 +65,8 @@ class Game:
                 self.enemies.pop(index)
                 if type(e) is Grunt:
                     self.score = (self.score + 100)
+                if type(e) is Family:
+                    self.score = (self.score + 100)
                 if type(e) is Brain:
                     self.score = (self.score + 500)
                 if type(e) is Enforcer:
@@ -74,10 +76,12 @@ class Game:
             if type(e) is Hulk:
                 e.move()
                 for f in self.family:
-                    if e.is_colliding_player(f.get_rect()):
-                        index = self.family.index(f)
-                        self.family.pop(index)
-            elif type(e) is Grunt or type(e) is Enforcer:
+                    if f.prog == False:
+                        if e.is_colliding_player(f.get_rect()):
+                            f.dead = True
+                            index = self.family.index(f)
+                            self.family.pop(index)
+            elif type(e) is Grunt or type(e) is Enforcer or type(e) is Family:
                 e.move_toward_player(self.player.get_coord())
             elif type(e) is Brain:
                 if self.family:
@@ -88,24 +92,30 @@ class Game:
                             closest = math.dist((e.x, e.y), (f.x, f.y))
                             target = f.get_coord()
                         if e.is_colliding_player(f.get_rect()):
-                            f.update_animation()
+                            f.prog = True
                     e.move(target)
                 else:
                     e.move(self.player.get_coord())
             elif type(e) is Sphereoids:
                 e.move()
             if e.is_colliding_player(self.player.get_rect()):
-                print("jogador")
+                print("a")
 
         for f in self.family:
-            if f.is_colliding_player(self.player.get_rect()):
+            if not f.prog:
+                if f.is_colliding_player(self.player.get_rect()):
+                    index = self.family.index(f)
+                    self.family.pop(index)
+                    self.family_count += 1000
+                    self.score = (self.score + self.family_count)
+                    if self.family_count > 5000:
+                        self.family_count = 5000
+                f.move()
+            if f.prog:
+                self.enemies.append(f)
                 index = self.family.index(f)
                 self.family.pop(index)
-                self.family_count += 1000
-                self.score = (self.score + self.family_count)
-                if self.family_count > 5000:
-                    self.family_count = 5000
-            f.move()
+                
         
     def loop(self):
         while self.playing:

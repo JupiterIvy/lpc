@@ -30,6 +30,8 @@ class Family:
         self.random_pos(rect)
         self.start_time = 0
         self.end = 0
+        self.prog = False
+        self.dead = False
         self.rand_coord = (random.randint(100, SCREEN_WIDTH - 200),                            
                     random.randint(100, SCREEN_HEIGHT - TOP_BAR_HEIGHT - 100))
     
@@ -47,6 +49,17 @@ class Family:
             self.rand_coord = (random.randint(100, SCREEN_WIDTH - 150),
                                random.randint(100, SCREEN_HEIGHT - TOP_BAR_HEIGHT - 50))
 
+    def move_toward_player(self, player_coords):
+        dx = player_coords[0] - self.x
+        dy = player_coords[1] - self.y
+        angle = math.atan2(dy, dx)
+        self.start_time += 1
+        if self.start_time == 5: 
+            self.x += self.speed * math.cos(angle)
+            self.y += self.speed * math.sin(angle)
+        if self.start_time > 5:
+            self.start_time = 0
+
     def random_pos(self, rects):
         while True:
             x = random.randint(100, SCREEN_WIDTH - 200)
@@ -59,24 +72,30 @@ class Family:
                 break
 
     def animate_idle(self):
-        self.elapsed += 1
-        if self.elapsed == 10:
-            self.family_angle += 1
-        if self.elapsed > 10:
-            self.elapsed = 0
-        if self.family_angle > 11:
-            self.family_angle = 0
+        if not self.dead:
+            self.elapsed += 1
+            if self.elapsed == 10:
+                self.family_angle += 1
+            if self.elapsed > 10:
+                self.elapsed = 0
+            if self.family_angle > 11:
+                self.family_angle = 0
+        else:
+            self.elapsed += 1
+            if self.elapsed == 2:
+                self.family_angle += 1
+            if self.elapsed > 2:
+                self.elapsed = 0
+            if self.family_angle > 13:
+                self.family_angle = 13
             
-    def update_animation(self):
-        rand = random.randint(0, 255)
-        color = 0
-        self.family_angle = 13
-        self.family_sprite.fill(color, None, pygame.BLEND_MAX)
-        self.elapsed += 1
-        if self.elapsed == 4:
-            color = (rand, rand, rand)
-        if self.elapsed > 4:
-            self.elapsed = 0
+    def prog_animation(self):
+        rand = random.randint(25, 200)
+        color = (0, 0, 0)
+        self.family_angle = 12
+        color = (rand, rand, rand)
+        print(color)
+        #self.family_sprite.fill(color, None, pygame.BLEND_RGB_SUB)
             
     def get_image(self) -> pygame.Surface:
         sub = self.family_sprite.subsurface(
@@ -93,7 +112,10 @@ class Family:
         return (self.x, self.y)
 
     def draw(self, surface: pygame.Surface):
-        self.animate_idle()
+        if not self.prog:
+            self.animate_idle()
+        if self.prog:
+            self.prog_animation()
         surface.blit(self.get_image(), self.get_coord())
 
     def is_colliding_player(self, player_rect):

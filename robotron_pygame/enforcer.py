@@ -63,6 +63,9 @@ class Sphereoids:
     def get_coord(self):
         return (self.x, self.y)
 
+    def get_spawn(self, rect):
+        return Enforcer(rect)
+
     def move(self):
         dx = self.rand_coord[0] - self.x
         dy = self.rand_coord[1] - self.y
