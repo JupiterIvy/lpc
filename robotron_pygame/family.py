@@ -61,6 +61,7 @@ class Family:
             self.elapsed = 0
         if self.family_angle > 11:
             self.family_angle = 0
+            
 
     def get_image(self) -> pygame.Surface:
         sub = self.family_sprite.subsurface(

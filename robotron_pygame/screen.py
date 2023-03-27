@@ -20,4 +20,4 @@ class Screen:
         
         score_players = self.font.render(
             str(score), True, WHITE_COLOR)
-        self.surface.blit(score_players, (660, 40))
+        self.surface.blit(score_players, (150, 25))
