@@ -1,4 +1,4 @@
-# The cake is a lie
+# The cake is a mentira
 
 from logging.config import listen
 from sqlite3 import Time
