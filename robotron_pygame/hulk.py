@@ -20,8 +20,7 @@ class Hulk:
         self.end = 0
         self.hulk_direction = random.randint(0, 1)
         self.rand_coord = self.random_direction()
-        self.rand_coord = (random.randint(100, SCREEN_WIDTH - 200),                            
-                    random.randint(100, SCREEN_HEIGHT - TOP_BAR_HEIGHT - 100))
+        print(self.rand_coord)
     
     def random_pos(self, rects):
         while True:
@@ -47,16 +46,12 @@ class Hulk:
     def move(self):
         dx = self.rand_coord[0] - self.x
         dy = self.rand_coord[1] - self.y
+        angle = math.atan2(dy, dx)
         self.start_time += 1
         if self.start_time == 5:
-            angle = math.atan2(dy, 0)
             self.x += self.speed * math.cos(angle)
             self.y += self.speed * math.sin(angle)
-        if self.start_time == 10:
-            angle = math.atan2(0, dx)
-            self.x += self.speed * math.cos(angle)
-            self.y += self.speed * math.sin(angle)
-        if self.start_time > 15:
+        if self.start_time > 5:
             self.start_time = 0
         if check_destination(self.rand_coord, self.x, self.y):
             self.rand_coord = self.random_direction()
@@ -95,5 +90,5 @@ class Hulk:
 
 
 def check_destination(pos, x, y):     
-    if pos[0] - x < 5 and pos[1] - y < 5:         
+    if abs(pos[0] - x) < 10 and abs(pos[1] - y) < 10:
         return True
