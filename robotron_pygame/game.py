@@ -84,8 +84,7 @@ class Game:
                             closest = math.dist((e.x, e.y), (f.x, f.y))
                             target = f.get_coord()
                         if e.is_colliding_player(f.get_rect()):
-                            index = self.family.index(f)
-                            self.family.pop(index)
+                            f.update_animation()
                     e.move(target)
                 else:
                     e.move(self.player.get_coord())

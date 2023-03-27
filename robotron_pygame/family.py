@@ -62,6 +62,16 @@ class Family:
         if self.family_angle > 11:
             self.family_angle = 0
             
+    def update_animation(self):
+        rand = random.randint(0, 255)
+        self.family_angle = 13
+        self.tank_sprite.fill(color, None, pygame.BLEND_MAX)
+        self.elapsed += 1
+        if self.elapsed == 4:
+            color = (rand, rand, rand)
+        if self.elapsed > 4:
+            self.elapsed = 0
+            
 
     def get_image(self) -> pygame.Surface:
         sub = self.family_sprite.subsurface(
