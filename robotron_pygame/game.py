@@ -4,6 +4,7 @@ from logging.config import listen
 from sqlite3 import Time
 from time import time
 import pygame
+import math
 from bullet import Bullet
 from config import *
 from screen import Screen
@@ -19,7 +20,7 @@ class Game:
     def __init__(self) -> None:
         self.playing = True
         self.screen = Screen()
-        self.score = (0)
+        self.score = 0
         with open(os.path.join("ps4.json"), 'r+') as file:
             button_keys = json.load(file)
         self.clock = pygame.time.Clock()
@@ -59,8 +60,16 @@ class Game:
             elif type(e) is Grunt:
                 e.move_toward_player(self.tank1.get_coord())
             elif type(e) is Brain:
-                for f in self.family:
-                    e.move(self.family, self.tank1.get_coord())
+                if self.family:
+                    target = self.family[0]
+                    closest = math.dist((e.x, e.y), (target.x, target.y))
+                    for f in self.family:
+                        if math.dist((e.x, e.y), (f.x, f.y)) <= closest:
+                            closest = math.dist((e.x, e.y), (f.x, f.y))
+                            target = f.get_coord()
+                    e.move(target)
+                else:
+                    e.move(self.tank1.get_coord())
 
         for f in self.family:
             f.move()
