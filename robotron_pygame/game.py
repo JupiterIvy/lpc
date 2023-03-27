@@ -40,11 +40,9 @@ class Game:
         for i in range(5):
             h = Hulk(self.map)
             b = Brain(self.map)
-            e = Enforcer(self.map)
             s = Sphereoids(self.map)
             self.enemies.append(s)
             self.enemies.append(h)
-            self.enemies.append(e)
             self.enemies.append(b)
         for i in range(5):
             grunts = Grunt(self.map)
@@ -103,6 +101,13 @@ class Game:
                     e.move(self.player.get_coord())
             elif type(e) is Sphereoids:
                 e.move()
+                if e.spawn_enforcer():
+                    enforcer = Enforcer((e.x, e.y))
+                    self.enemies.append(enforcer)
+                if e.kill():
+                    index = self.enemies.index(e)
+                    self.enemies.pop(index)
+
             if e.is_colliding_player(self.player.get_rect()):
                 print("a")
 
