@@ -22,12 +22,12 @@ class Game:
         self.playing = True
         self.screen = Screen()
         self.score = 0
-        self.time = 0
         with open(os.path.join("ps4.json"), 'r+') as file:
             button_keys = json.load(file)
         self.clock = pygame.time.Clock()
         self.map = SCREEN_RECTS
         self.family_count = 0
+        self.time = 0
         self.enemies = []
         self.family = []
         for i in range(5):
@@ -57,7 +57,6 @@ class Game:
                 self.playing = False
 
     def listen_keyboard(self):
-        self.time += 1
         self.player.move(self.map)
         for e in self.enemies:
             if self.player.has_shooted_enemy(e.get_rect()) and type(e) is not Hulk:
