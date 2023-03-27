@@ -53,30 +53,16 @@ class Brain:
     def get_coord(self):
         return (self.x, self.y)
 
-    def move(self, family, player_coords):
-        target = random.randint(0, len(family) - 1)
-
-        if len(family) > 0:
-            dx = family[target].x - self.x
-            dy = family[target].y - self.y
-            angle = math.atan2(dy, dx)
-            self.start_time += 1
-            if self.start_time == 5:
-                self.x += self.speed * math.cos(angle)
-                self.y += self.speed * math.sin(angle)
-            if self.start_time > 5:
-                self.start_time = 0
-
-        else:
-            dx = player_coords[0] - self.x
-            dy = player_coords[1] - self.y
-            angle = math.atan2(dy, dx)
-            self.start_time += 1
-            if self.start_time == 5:
-                self.x += self.speed * math.cos(angle)
-                self.y += self.speed * math.sin(angle)
-            if self.start_time > 5:
-                self.start_time = 0
+    def move(self, target):
+        dx = target[0] - self.x
+        dy = target[1] - self.y
+        angle = math.atan2(dy, dx)
+        self.start_time += 1
+        if self.start_time == 5:
+            self.x += self.speed * math.cos(angle)
+            self.y += self.speed * math.sin(angle)
+        if self.start_time > 5:
+            self.start_time = 0
 
     def draw(self, surface: pygame.Surface):
         self.animate_idle()

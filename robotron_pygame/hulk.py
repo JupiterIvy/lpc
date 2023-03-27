@@ -20,8 +20,7 @@ class Hulk:
         self.end = 0
         self.hulk_direction = random.randint(0, 1)
         self.rand_coord = self.random_direction()
-        self.rand_coord = (random.randint(100, SCREEN_WIDTH - 200),                            
-                    random.randint(100, SCREEN_HEIGHT - TOP_BAR_HEIGHT - 100))
+        print(self.rand_coord)
     
     def random_pos(self, rects):
         while True:
@@ -44,16 +43,7 @@ class Hulk:
             return (self.x,
                     random.randint(100, SCREEN_HEIGHT - TOP_BAR_HEIGHT - 100))
 
-    def colliding_rects(self, rects):
-        rect = pygame.Rect(self.x + (self.hulk_direction),
-                           self.y + (self.hulk_direction),
-                           self.size, self.size)
-        
-        if rect.collidelist(rects) < 0:
-            self.x += self.hulk_direction
-            self.y += self.hulk_direction
-
-    def move(self, map):
+    def move(self):
         dx = self.rand_coord[0] - self.x
         dy = self.rand_coord[1] - self.y
         angle = math.atan2(dy, dx)
@@ -65,8 +55,6 @@ class Hulk:
             self.start_time = 0
         if check_destination(self.rand_coord, self.x, self.y):
             self.rand_coord = self.random_direction()
-        
-        self.colliding_rects(map)
 
     def animate_idle(self):
         self.elapsed += 1
@@ -99,6 +87,7 @@ class Hulk:
         self.collided_player = pygame.Rect(
             self.x, self.y, self.size, self.size).colliderect(player_rect)
         return self.collided_player
+
 
 def check_destination(pos, x, y):     
     if abs(pos[0] - x) < 10 and abs(pos[1] - y) < 10:

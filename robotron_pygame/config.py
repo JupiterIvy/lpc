@@ -18,7 +18,7 @@ GRID_LIGHT = (141, 240, 240)
 WHITE_COLOR = (255, 255, 255)
 BLACK_COLOR = (0, 0, 0)
 
-SPEED = 1
+SPEED = 3
 
 SCREEN_RECTS = [
     # Borders

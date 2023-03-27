@@ -330,8 +330,10 @@ class Tank:
                 break
 
     def has_shooted_enemy(self, enemy_rect):
-        for i in range(len(self.bullet)):
-            if self.bullet and self.bullet[i].collided_enemy(enemy_rect):
-                self.bullet.pop(i)
-            return True
+        for b in self.bullet:
+            b.is_colliding_enemy(enemy_rect)
+            if self.bullet and b.collided_enemy:
+                index = self.bullet.index(b)
+                self.bullet.pop(index)
+                return True
         return False
