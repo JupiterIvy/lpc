@@ -13,7 +13,7 @@ from grunt import Grunt
 from family import Family
 from hulk import Hulk
 from brain import Brain
-from enforcer import Enforcer
+from enforcer import Enforcer, Sphereoids
 import json, os
 
 
@@ -40,6 +40,8 @@ class Game:
             h = Hulk(self.map)
             b = Brain(self.map)
             e = Enforcer(self.map)
+            s = Sphereoids(self.map)
+            self.enemies.append(s)
             self.enemies.append(h)
             self.enemies.append(e)
             self.enemies.append(b)
@@ -67,6 +69,8 @@ class Game:
                     self.score = (self.score + 500)
                 if type(e) is Enforcer:
                     self.score = (self.score + 150)
+                if type(e) is Sphereoids:
+                    self.score = (self.score + 1000)
             if type(e) is Hulk:
                 e.move()
                 for f in self.family:
@@ -88,6 +92,8 @@ class Game:
                     e.move(target)
                 else:
                     e.move(self.player.get_coord())
+            elif type(e) is Sphereoids:
+                e.move()
             if e.is_colliding_player(self.player.get_rect()):
                 print("jogador")
 

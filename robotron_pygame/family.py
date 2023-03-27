@@ -5,6 +5,11 @@ import json, os
 from config import SPEED, TOP_BAR_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT
 
 
+def check_destination(pos, x, y):     
+    if pos[0] - x < 5 and pos[1] - y < 5:         
+        return True
+
+
 class Family:
     collided_player = False
     size = 30
@@ -64,15 +69,15 @@ class Family:
             
     def update_animation(self):
         rand = random.randint(0, 255)
+        color = 0
         self.family_angle = 13
-        self.tank_sprite.fill(color, None, pygame.BLEND_MAX)
+        self.family_sprite.fill(color, None, pygame.BLEND_MAX)
         self.elapsed += 1
         if self.elapsed == 4:
             color = (rand, rand, rand)
         if self.elapsed > 4:
             self.elapsed = 0
             
-
     def get_image(self) -> pygame.Surface:
         sub = self.family_sprite.subsurface(
             (self.family_angle * self.size, 0, self.size, self.size))
@@ -95,7 +100,3 @@ class Family:
         self.collided_player = pygame.Rect(
             self.x, self.y, self.size, self.size).colliderect(player_rect)
         return self.collided_player
-
-def check_destination(pos, x, y):     
-    if pos[0] - x < 5 and pos[1] - y < 5:         
-        return True
