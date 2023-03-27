@@ -93,6 +93,7 @@ class Hulk:
             self.x, self.y, self.size, self.size).colliderect(player_rect)
         return self.collided_player
 
+
 def check_destination(pos, x, y):     
     if pos[0] - x < 5 and pos[1] - y < 5:         
         return True
