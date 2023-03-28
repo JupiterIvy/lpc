@@ -47,9 +47,10 @@ class Game:
         for i in range(5):
             grunts = Grunt(self.map)
             self.enemies.append(grunts)
-        
+
+        self.arena = pygame.rect.Rect(120, 70, 1015, 570)
         self.player = Player((620, 355), PLAYER_1_COLOR, button_keys['left_arrow'],
-                        button_keys['up_arrow'], button_keys['right_arrow'],button_keys['down_arrow'])
+                             button_keys['up_arrow'], button_keys['right_arrow'],button_keys['down_arrow'])
             
     def listen_events(self):
         for event in pygame.event.get():
@@ -113,6 +114,12 @@ class Game:
                     self.enemies.pop(index)
             elif type(e) is EnforcerBullet:
                 e.move()
+                if e.kill():
+                    index = self.enemies.index(e)
+                    self.enemies.pop(index)
+                if not self.arena.colliderect(e.get_rect()):
+                    index = self.enemies.index(e)
+                    self.enemies.pop(index)
 
             if e.is_colliding_player(self.player.get_rect()):
                 print("a")

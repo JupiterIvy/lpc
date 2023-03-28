@@ -190,8 +190,12 @@ class EnforcerBullet:
         self.y = pos[1]
         self.target = player_coords
         self.start_time = 0
-        self.end = 0
+        self.timer = 0
+        self.limit = 1000
         self.bullet = []
+        self.dx = self.target[0] - self.x
+        self.dy = self.target[1] - self.y
+        self.angle = math.atan2(self.dy, self.dx)
 
     def animate_idle(self):
         self.elapsed += 1
@@ -217,17 +221,19 @@ class EnforcerBullet:
         return (self.x, self.y)
 
     def move(self):
-        dx = self.target[0] - self.x
-        dy = self.target[1] - self.y
-        angle = math.atan2(dy, dx)
+        if not check_destination(self.target, self.x, self.y):
+            self.dx = self.target[0] - self.x
+            self.dy = self.target[1] - self.y
+            #self.angle = math.atan2(self.dy, self.dx)
         self.start_time += 1
         if self.start_time == 5:
-            self.x += self.speed * math.cos(angle)
-            self.y += self.speed * math.sin(angle)
+            self.x += self.speed * math.cos(self.angle)
+            self.y += self.speed * math.sin(self.angle)
         if self.start_time > 5:
             self.start_time = 0
 
     def draw(self, surface: pygame.Surface):
+        self.timer += 1
         self.animate_idle()
         surface.blit(self.get_image(), self.get_coord())
 
@@ -235,3 +241,7 @@ class EnforcerBullet:
         self.collided_player = pygame.Rect(
             self.x, self.y, self.size, self.size).colliderect(player_rect)
         return self.collided_player
+
+    def kill(self):
+        if self.timer > self.limit:
+            return True
