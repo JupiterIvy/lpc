@@ -8,7 +8,7 @@ from config import SPEED, TOP_BAR_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT
 class Brain:
     collided_player = False
     size = 30
-    speed = 5
+    speed = 4
     elapsed = 0
     
     def __init__(self, rect):

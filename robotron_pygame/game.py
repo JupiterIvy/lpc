@@ -29,34 +29,108 @@ class Game:
         self.map = SCREEN_RECTS
         self.family_count = 0
         self.time = 0
+        self.player_lives = 4
         self.enemies = []
         self.family = []
-        for i in range(5):
-            m = Family(self.map, 0)
-            f = Family(self.map, 1)
-            c = Family(self.map, 2)
-            self.family.append(m)
-            self.family.append(f)
-            self.family.append(c)
-        for i in range(5):
-            h = Hulk(self.map)
-            b = Brain(self.map)
-            s = Sphereoids(self.map)
-            self.enemies.append(s)
-            self.enemies.append(h)
-            self.enemies.append(b)
-        for i in range(5):
-            sprite = random.randint(0, 3)
-            e = Electrodes(self.map, sprite)
-            self.enemies.append(e)
-        for i in range(5):
-            grunts = Grunt(self.map)
-            self.enemies.append(grunts)
-
+        self.stage = 1
         self.arena = pygame.rect.Rect(120, 70, 1015, 570)
         self.player = Player((620, 355), PLAYER_1_COLOR, button_keys['left_arrow'],
                              button_keys['up_arrow'], button_keys['right_arrow'],button_keys['down_arrow'])
-            
+    
+    def reset_pos(self):
+        self.player.x = 620
+        self.player.y = 355
+
+    def next_level(self):
+        for e in self.enemies:
+            count_grunts = len([e for e in self.enemies if type(e) is Grunt])
+            count_all = len([e for e in self.enemies if type(e) is not Hulk])
+            print(count_grunts)
+            if count_grunts == 0:
+                self.enemies.clear()
+                self.family.clear()
+                self.reset_pos()
+                return True
+
+    def stages(self):
+        if self.stage == 1:
+            for i in range(2):
+                m = Family(self.map, 0)
+                f = Family(self.map, 1)
+                c = Family(self.map, 2)
+                self.family.append(m)
+                self.family.append(f)
+                self.family.append(c)
+            for i in range(10):
+                sprite = random.randint(0, 3)
+                e = Electrodes(self.map, sprite)
+                self.enemies.append(e)
+            for i in range(10):
+                grunts = Grunt(self.map)
+                self.enemies.append(grunts)
+            self.stage = 2
+        if self.stage == 3:
+            for i in range(5):
+                m = Family(self.map, 0)
+                f = Family(self.map, 1)
+                c = Family(self.map, 2)
+                self.family.append(m)
+                self.family.append(f)
+                self.family.append(c)
+            for i in range(5):
+                h = Hulk(self.map)
+                self.enemies.append(h)
+            for i in range(15):
+                sprite = random.randint(0, 3)
+                e = Electrodes(self.map, sprite)
+                self.enemies.append(e)
+            for i in range(15):
+                grunts = Grunt(self.map)
+                self.enemies.append(grunts)
+            self.stage = 4
+        if self.stage == 5:
+            for i in range(5):
+                m = Family(self.map, 0)
+                f = Family(self.map, 1)
+                c = Family(self.map, 2)
+                self.family.append(m)
+                self.family.append(f)
+                self.family.append(c)
+            for i in range(8):
+                h = Hulk(self.map)
+                s = Sphereoids(self.map)
+                self.enemies.append(s)
+                self.enemies.append(h)
+            for i in range(15):
+                sprite = random.randint(0, 3)
+                e = Electrodes(self.map, sprite)
+                self.enemies.append(e)
+            for i in range(17):
+                grunts = Grunt(self.map)
+                self.enemies.append(grunts)
+            self.stage = 6
+        if self.stage == 7:
+            for i in range(5):
+                m = Family(self.map, 0)
+                f = Family(self.map, 1)
+                c = Family(self.map, 2)
+                self.family.append(m)
+                self.family.append(f)
+                self.family.append(c)
+            for i in range(10):
+                h = Hulk(self.map)
+                b = Brain(self.map)
+                self.enemies.append(s)
+                self.enemies.append(h)
+            for i in range(15):
+                sprite = random.randint(0, 3)
+                e = Electrodes(self.map, sprite)
+                self.enemies.append(e)
+            for i in range(20):
+                grunts = Grunt(self.map)
+                self.enemies.append(grunts)
+            self.stage = 8
+    
     def listen_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -64,6 +138,8 @@ class Game:
 
     def listen_keyboard(self):
         self.time += 1
+        if self.next_level():
+            self.stage += 1
         self.player.move(self.map)
         for e in self.enemies:
             if self.player.has_shooted_enemy(e.get_rect()) and type(e) is not Hulk:
@@ -128,8 +204,13 @@ class Game:
                     self.enemies.pop(index)
 
             if e.is_colliding_player(self.player.get_rect()):
-                print("a")
-
+                self.player_lives -= 1
+                self.enemies.clear()
+                self.family.clear()
+                self.stage -= 1
+                self.reset_pos()
+                self.family_count = 0
+        
         for f in self.family:
             if not f.prog:
                 if f.is_colliding_player(self.player.get_rect()):
@@ -144,17 +225,30 @@ class Game:
                 self.enemies.append(f)
                 index = self.family.index(f)
                 self.family.pop(index)
+            
+    def defeat(self):
+        if self.player_lives == 0:
+            return True
 
     def loop(self):
         while self.playing:
-            self.listen_keyboard()
-            self.listen_events()
-            self.screen.draw(self.map, self.score)
-            self.player.draw(self.screen.surface)
-            for e in self.enemies:
-                e.draw(self.screen.surface)
-            for f in self.family:
-                f.draw(self.screen.surface)
-
+            if not self.defeat():
+                self.stages()
+                self.listen_keyboard()
+                self.listen_events()
+                self.screen.draw(self.map, self.score, self.player_lives)
+                self.player.draw(self.screen.surface)
+                for e in self.enemies:
+                    e.draw(self.screen.surface)
+                for f in self.family:
+                    f.draw(self.screen.surface)
+            else:
+                self.screen.draw(self.map, self.score, self.player_lives)
+                self.player.draw(self.screen.surface)
+                for e in self.enemies:
+                    e.draw(self.screen.surface)
+                for f in self.family:
+                    f.draw(self.screen.surface)
+                self.screen.defeat(self.player)
             pygame.display.flip()
             self.clock.tick(60)
