@@ -1,29 +1,30 @@
-# Combat Tank Pong (Refactored)
+# Robotron 2084
 
-Released in 1977, “Combat” was one of nine games released with the Atari 2600 and is a 2D tank shooter developed and published by Atari.
+The Game takes place in the year 2084 in a fictional world where robots have staged a cybernetic revolt against humanity. You are the hero that will save the remaining humans alive by taking down killer robots.
 
 
-<a href="https://github.com/JupiterIvy"><img src="https://user-images.githubusercontent.com/65917017/217365957-7e7c30db-d92e-4895-82bf-fad1a480860a.png" width="300px;" alt=""/></a>
+<a href="https://github.com/JupiterIvy"><img src="https://user-images.githubusercontent.com/65917017/228010997-372a804e-7fe2-4742-bab5-0049463f4415.png" width="300px;" alt=""/></a>
 
 # CONTRIBUTORS
 <table>
 <tr>
-    <td align="center"><a href="https://github.com/JupiterIvy"><img src="https://media.licdn.com/dms/image/D4D03AQHt30NNq_kSvQ/profile-displayphoto-shrink_400_400/0/1670128148472?e=1677110400&v=beta&t=0qSqk2zVgjYNNHqF8_p3BtYed18SuSrGcR6_Obe7vIU" width="100px;" alt=""/><br /><sub><b>Evelyn Bessa</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/JupiterIvy"><img src="https://user-images.githubusercontent.com/65917017/228006324-d03dae86-ef6e-4dd1-b79a-f44a99d6cde4.png" width="100px;" alt=""/><br /><sub><b>Evelyn Bessa</b></sub></a><br /></td>
     <td align="center"><a href="https://github.com/JuanCarloPaes"><img src="https://avatars.githubusercontent.com/u/46506431?v=4" width="100px;" alt=""/><br /><sub><b>Juan Paes</b></sub></a><br /></td>
     <td align="center"><a href="https://github.com/sweilos"><img src="https://avatars.githubusercontent.com/u/54459008?v=4" width="100px;" alt=""/><br /><sub><b>Yago Nunes</b></sub></a><br /></td>
-    <td align="center"><a href="https://github.com/giseledesa"><img src="https://avatars.githubusercontent.com/u/120344151?v=4" width="100px;" alt=""/><br /><sub><b>Gisele de Sá</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/giseledesa"><img src="https://media.licdn.com/dms/image/C4D03AQH4CX61Pe9A_g/profile-displayphoto-shrink_400_400/0/1605043821538?e=1685577600&v=beta&t=n8N0zu8SH8xgiJWB_8bQufPEGyIc4-1LzKKN9ELPiB0" width="100px;" alt=""/><br /><sub><b>Gisele de Sá</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/dinglem"><img src="https://user-images.githubusercontent.com/65917017/205512227-0997b11a-99a7-43ae-a3e8-560e0fcf5951.jpg" width="100px;" alt=""/><br /><sub><b>Gabriel Machado</b></sub></a><br /></td>
     
 </table>
 
 ## Goals
 
-The objective of the game is to hit the opposing player's tank with as many shots as possible, so that one player has enough hit advantage over the other to win the match.
+The objectives of the game are to defeat waves of enemy robots, rescue remaining surviving humans, and earn as many points as possible.
 
 ## Movements
 
-The player can only move forwards to the direction it's facing, the angle can be changed using the other arrows.
+The player can any direction, such as forward, backwards, sideways and diagonally.
 
-There's two controllers the player can use to move the tank: using the Keyboard or a Gamepad
+There's two controllers the player can use to move the hero: using the Keyboard or a Gamepad
 
 Arrows:
 
@@ -38,25 +39,37 @@ Gamepad:
 
 ## Shoot
 
-In gamepads, the tank can shoot a bullet pressing 'x', while in keyboard it's the SpaceBar
+In a playstation gamepad, the hero can shoot any direction, by using cross(shooting down), triangle(shooting up), circle (shooting to the right), square (shooting to the left).
 
 <table>
-<td align="center"><a href="https://github.com/JupiterIvy"><img src="https://user-images.githubusercontent.com/65917017/217363480-314367cb-f0b6-43f4-af56-cc957bc80b22.png" width="200px;" alt=""/></a></td>
-<td align="center"><a href="https://github.com/JupiterIvy"><img src="https://user-images.githubusercontent.com/65917017/217364043-75eff46f-00cf-4a03-aaa4-635462afb4c5.png" width="200px;" alt=""/></a></td>
+<td align="center"><a href="https://github.com/JupiterIvy"><img src="https://user-images.githubusercontent.com/65917017/228013435-3854fe2f-a332-42f4-8e7a-977f6616feb4.png" width="200px;" alt=""/></a></td>
 </table>
 
-## Arena
+## Enemies
 
-This game contains two arenas, they can be changed in the line
-```
-## Game.py line 21
-self.map = 2*SCREEN_RECTS
-```
-For arena 1, leave as it is (SCREEN_RECTS), while for arena 2, change the line to
-```
-## Game.py line 21
-self.map = 2*SCREEN_RECTS_2
-```
+### Grunt
+<img align="left" width="100" height="100" src="https://user-images.githubusercontent.com/65917017/228014623-a9b4f6a3-aa69-4986-b69a-b64b395a591d.png">
+The Force of Ground Roving Unit Network Terminator (GRUNT) Robotrons seek to destroy you. They are the least sophisticated species of Robot. It has no weapon and possesses only minimal intelligence. This does not mean it is to be dealt with lightly. It will single-mindedly pursue you to capture and destroy you.
+
+### Hulk
+<img align="left" width="100" height="100" src="https://user-images.githubusercontent.com/65917017/228014903-b38c950f-c6d2-409e-8862-28ba5a928db1.png">
+The Hulk Robotrons seek out and eliminate the last human family. In all attack waves except every 5th, the Hulk will stalk his prey. It alone of the Robot species cannot be killed. Your Laser Gun can only slow it down or divert it from its objective of crushing all life from the humans and from yourself. You must avoid this Robot at all costs or your mission will be lost at the outset.
+
+### Sphereoids & Enforcers
+<img align="left" width="100" height="100" src="https://user-images.githubusercontent.com/65917017/228015154-c63f7808-eb59-4adf-a69f-9bab288e8e79.png">
+The pulsating sphere may at first look harmless, but it is the mothership which spawns deadly Enforcer Embryos. You must try to explode the Sphereoid before it ejects the Embryos. The Embryos grow into evil Enforcers. Let them live and they will lessen your chance for survival by launching Enforcer Sparks.
+
+### Quarks & Tanks
+<img align="left" width="100" height="100" src="https://user-images.githubusercontent.com/65917017/228015767-875c0498-3627-47b4-a57c-ece47248af05.png">
+The Quarks are programmed to manufacture Tank Robotrons. Eliminate the Quarks as quickly as possible before any Tanks can be manufactured. The Tank's goal is to kill you by firing rebounding Shells. Take out the tanks before they have sufficient time to fill the stage with Shells.
+
+### Brains
+<img align="left" width="100" height="100" src="https://user-images.githubusercontent.com/65917017/228015953-5faa48c1-6436-492a-b7a9-3a939b5e781c.png">
+The Brain is the most clever and dangerous of the Robot species. Its 2-pronged attack will be launched every 5th wave. If it collides with you, it will electrocute you where you stand. It also possesses the devastating power to fire Cruise Missiles which will mercilessly seek you out. Destroy or be destroyed. The victims of the 2nd prong of the Brain's attack are the defenseless humans. If captured, a human will be irreversibly transformed, literally re-programmed by the Brain's incredible mind powers, into a Prog. Into a Robot that will viciously turn against its own protector, against you! Annihilate the Progs or meet a violent death at their hands.
+
+### Electrodes
+<img align="left" width="100" height="25" src="https://user-images.githubusercontent.com/65917017/228016199-840a0cca-f45c-407a-9290-f91e611f027d.png">
+The pulsating, immobile Electrodes will attempt to block your path. Collide with them and meet instant death. Fortunately, the Grunts will also be annihilated by this means. You must avoid the Electrodes or obliterate them with your Laser Gun. In each new attack wave they will assume a different shape, but remain just as deadly if contact is made.
+
 
 Enjoy.
-
