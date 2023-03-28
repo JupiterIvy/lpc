@@ -85,10 +85,10 @@ class Game:
                     if f.prog == False:
                         if e.is_colliding_player(f.get_rect()):
                             f.dead = True
-                            if self.time == 5:
+                            if self.time == 3:
                                 index = self.family.index(f)
                                 self.family.pop(index)
-                            if self.time > 5:
+                            if self.time > 3:
                                 self.time = 0
             elif type(e) is Enforcer:
                 e.move(self.player.get_coord())
@@ -128,7 +128,7 @@ class Game:
                     self.enemies.pop(index)
 
             if e.is_colliding_player(self.player.get_rect()):
-                print("a")
+                pass
 
         for f in self.family:
             if not f.prog:
