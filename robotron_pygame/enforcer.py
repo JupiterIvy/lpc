@@ -203,7 +203,7 @@ class EnforcerBullet:
             self.enforcer_bullet_angle += 1
         if self.elapsed > 10:
             self.elapsed = 0
-        if self.enforcer_bullet_angle > 5:
+        if self.enforcer_bullet_angle > 3:
             self.enforcer_bullet_angle = 0
 
     def get_image(self) -> pygame.Surface:

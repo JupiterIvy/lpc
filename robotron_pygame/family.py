@@ -94,13 +94,8 @@ class Family:
                 self.family_angle = 0
         
     def prog_animation(self):
-        rand = random.randint(25, 200)
-        color = (0, 0, 0)
         self.family_angle = 12
-        colorImage = pygame.Surface(self.family_sprite.get_size(), pygame.SRCALPHA).convert_alpha()
-        colorImage.fill(color)
-        self.family_sprite.blit(colorImage, (0,0), None, pygame.BLEND_MAX)
-            
+    
     def get_image(self) -> pygame.Surface:
         sub = self.family_sprite.subsurface(
             (self.family_angle * self.size, 0, self.size, self.size))
