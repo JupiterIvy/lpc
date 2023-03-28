@@ -78,10 +78,10 @@ class Game:
                     if f.prog == False:
                         if e.is_colliding_player(f.get_rect()):
                             f.dead = True
-                            if self.time == 15:
+                            if self.time == 12:
                                 index = self.family.index(f)
                                 self.family.pop(index)
-                            if self.time > 15:
+                            if self.time > 12:
                                 self.time = 0
             elif type(e) is Enforcer:
                 e.move(self.player.get_coord())

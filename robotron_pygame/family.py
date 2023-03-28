@@ -95,7 +95,7 @@ class Family:
         
     def prog_animation(self):
         rand = random.randint(25, 200)
-        color = (255, 0, 0)
+        color = (0, 0, 0)
         self.family_angle = 12
         colorImage = pygame.Surface(self.family_sprite.get_size(), pygame.SRCALPHA).convert_alpha()
         colorImage.fill(color)

@@ -184,7 +184,7 @@ class EnforcerBullet:
 
     def __init__(self, pos, player_coords):
         self.enforcer_bullet_sprite = pygame.image.load(
-            "img/enforcer_bullet.png").convert_alpha()
+            "img/enf_bullet.png").convert_alpha()
         self.enforcer_bullet_angle = 0
         self.x = pos[0]
         self.y = pos[1]
