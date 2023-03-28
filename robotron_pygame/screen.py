@@ -3,6 +3,8 @@ from pygame.locals import *
 from config import *
 
 color = 0
+
+
 class Screen:
     
     def __init__(self) -> None:

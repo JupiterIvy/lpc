@@ -5,11 +5,17 @@ import json, os
 from config import SPEED, TOP_BAR_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT
 
 
+def check_destination(pos, x, y):     
+    if pos[0] - x < 5 and pos[1] - y < 5:         
+        return True
+
+
 class Family:
     collided_player = False
     size = 30
     speed = 5
     elapsed = 0
+    vector = None
     
     def __init__(self, rect, sprite):
         if sprite == 0:
@@ -24,7 +30,10 @@ class Family:
         self.family_angle = 0
         self.random_pos(rect)
         self.start_time = 0
+        self.rect = self.get_rect()
         self.end = 0
+        self.prog = False
+        self.dead = False
         self.rand_coord = (random.randint(100, SCREEN_WIDTH - 200),                            
                     random.randint(100, SCREEN_HEIGHT - TOP_BAR_HEIGHT - 100))
     
@@ -42,6 +51,25 @@ class Family:
             self.rand_coord = (random.randint(100, SCREEN_WIDTH - 150),
                                random.randint(100, SCREEN_HEIGHT - TOP_BAR_HEIGHT - 50))
 
+    def move_toward_player(self, player_coords):
+        self.speed = 6
+        self.start_time += 1
+        x = 1 if player_coords[0] > self.x else -1
+        y = 1 if player_coords[1] > self.y else -1
+        if random.random() < 0.25:
+            x = -x
+        if random.random() < 0.25:
+            y = -y
+        if self.start_time == 3:
+            self.vector = pygame.Vector2(x, y)
+            self.x += self.vector[0] * self.speed
+            self.y += self.vector[1] * self.speed
+            self.x += x
+            self.y += y
+        if self.start_time > 3:
+            self.start_time = 0
+        
+
     def random_pos(self, rects):
         while True:
             x = random.randint(100, SCREEN_WIDTH - 200)
@@ -54,15 +82,25 @@ class Family:
                 break
 
     def animate_idle(self):
-        self.elapsed += 1
-        if self.elapsed == 10:
-            self.family_angle += 1
-        if self.elapsed > 10:
-            self.elapsed = 0
-        if self.family_angle > 11:
-            self.family_angle = 0
+        if self.dead:
+            self.family_angle = 13
+        if not self.dead:
+            self.elapsed += 1
+            if self.elapsed == 10:
+                self.family_angle += 1
+            if self.elapsed > 10:
+                self.elapsed = 0
+            if self.family_angle > 11:
+                self.family_angle = 0
+        
+    def prog_animation(self):
+        rand = random.randint(25, 200)
+        color = (0, 0, 0)
+        self.family_angle = 12
+        colorImage = pygame.Surface(self.family_sprite.get_size(), pygame.SRCALPHA).convert_alpha()
+        colorImage.fill(color)
+        self.family_sprite.blit(colorImage, (0,0), None, pygame.BLEND_MAX)
             
-
     def get_image(self) -> pygame.Surface:
         sub = self.family_sprite.subsurface(
             (self.family_angle * self.size, 0, self.size, self.size))
@@ -78,14 +116,13 @@ class Family:
         return (self.x, self.y)
 
     def draw(self, surface: pygame.Surface):
-        self.animate_idle()
+        if not self.prog:
+            self.animate_idle()
+        if self.prog:
+            self.prog_animation()
         surface.blit(self.get_image(), self.get_coord())
 
     def is_colliding_player(self, player_rect):
         self.collided_player = pygame.Rect(
             self.x, self.y, self.size, self.size).colliderect(player_rect)
         return self.collided_player
-
-def check_destination(pos, x, y):     
-    if pos[0] - x < 5 and pos[1] - y < 5:         
-        return True
