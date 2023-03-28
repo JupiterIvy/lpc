@@ -147,8 +147,8 @@ class Game:
 
     def loop(self):
         while self.playing:
-            self.listen_keyboard()
             self.listen_events()
+            self.listen_keyboard()
             
             self.screen.draw(self.map, self.score)
             self.player.draw(self.screen.surface)
