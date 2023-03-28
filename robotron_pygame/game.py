@@ -13,7 +13,7 @@ from grunt import Grunt
 from family import Family
 from hulk import Hulk
 from brain import Brain
-from enforcer import Enforcer, Sphereoids
+from enforcer import Enforcer, Sphereoids, EnforcerBullet
 import json, os
 
 
@@ -83,7 +83,12 @@ class Game:
                                 self.family.pop(index)
                             if self.time > 15:
                                 self.time = 0
-            elif type(e) is Grunt or type(e) is Enforcer or type(e) is Family:
+            elif type(e) is Enforcer:
+                e.move(self.player.get_coord())
+                if e.shoot():
+                    bullet = EnforcerBullet((e.x, e.y), self.player.get_coord())
+                    self.enemies.append(bullet)
+            elif type(e) is Grunt or type(e) is Family:
                 e.move_toward_player(self.player.get_coord())
             elif type(e) is Brain:
                 if self.family:
@@ -106,6 +111,8 @@ class Game:
                 if e.kill():
                     index = self.enemies.index(e)
                     self.enemies.pop(index)
+            elif type(e) is EnforcerBullet:
+                e.move()
 
             if e.is_colliding_player(self.player.get_rect()):
                 print("a")
@@ -124,8 +131,7 @@ class Game:
                 self.enemies.append(f)
                 index = self.family.index(f)
                 self.family.pop(index)
-                
-        
+
     def loop(self):
         while self.playing:
             self.listen_keyboard()
