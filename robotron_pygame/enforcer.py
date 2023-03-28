@@ -179,7 +179,7 @@ class Enforcer:
 class EnforcerBullet:
     collided_player = False
     size = 30
-    speed = 5
+    speed = 8
     elapsed = 0
 
     def __init__(self, pos, player_coords):
