@@ -128,7 +128,7 @@ class Game:
                     self.enemies.pop(index)
 
             if e.is_colliding_player(self.player.get_rect()):
-                pass
+                print("a")
 
         for f in self.family:
             if not f.prog:
@@ -147,9 +147,8 @@ class Game:
 
     def loop(self):
         while self.playing:
-            self.listen_events()
             self.listen_keyboard()
-            
+            self.listen_events()
             self.screen.draw(self.map, self.score)
             self.player.draw(self.screen.surface)
             for e in self.enemies:
