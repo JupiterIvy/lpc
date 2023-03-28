@@ -1,24 +1,30 @@
 import random
 import pygame
 import json, os
-from config import SPEED, TOP_BAR_HEIGHT
+from config import SPEED, TOP_BAR_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT
 
 
 class Electrodes:
     collided_player = False
-    size = 45
-    
+    size = 30
     elapsed = 0
-    def __init__(self,rect):
-        self.electrodes_sprite = pygame.image.load(
-                "img/electrodes_all.png").convert_alpha()
+
+    def __init__(self, rect, sprite):
+        if sprite == 0:
+            self.electrodes_sprite = pygame.image.load("img/electrode1.png").convert_alpha()
+        if sprite == 1:
+            self.electrodes_sprite = pygame.image.load("img/electrode2.png").convert_alpha()
+        if sprite == 2:
+            self.electrodes_sprite = pygame.image.load("img/electrode3.png").convert_alpha()
+        if sprite == 3:
+            self.electrodes_sprite = pygame.image.load("img/electrode4.png").convert_alpha()
         self.electrodes_angle = 0
         self.random_pos(rect)
     
     def random_pos(self, rects):
         while True:
-            x = random.randint(100, 760 - TOP_BAR_HEIGHT)
-            y = random.randint(100, 800 - TOP_BAR_HEIGHT)
+            x = random.randint(100, SCREEN_WIDTH - 200)
+            y = random.randint(100, SCREEN_HEIGHT - TOP_BAR_HEIGHT - 100)
 
             rect = pygame.Rect(x, y, self.size, self.size)
             if rect.collidelist(rects) < 0:

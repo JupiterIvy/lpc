@@ -1,5 +1,5 @@
 # The cake is a mentira
-
+import random
 from logging.config import listen
 from sqlite3 import Time
 from time import time
@@ -13,6 +13,7 @@ from grunt import Grunt
 from family import Family
 from hulk import Hulk
 from brain import Brain
+from electrodes import Electrodes
 from enforcer import Enforcer, Sphereoids, EnforcerBullet
 import json, os
 
@@ -45,6 +46,10 @@ class Game:
             self.enemies.append(h)
             self.enemies.append(b)
         for i in range(5):
+            sprite = random.randint(0, 3)
+            e = Electrodes(self.map, sprite)
+            self.enemies.append(e)
+        for i in range(5):
             grunts = Grunt(self.map)
             self.enemies.append(grunts)
 
@@ -58,7 +63,7 @@ class Game:
                 self.playing = False
 
     def listen_keyboard(self):
-        self.family = 0
+        self.time += 1
         self.player.move(self.map)
         for e in self.enemies:
             if self.player.has_shooted_enemy(e.get_rect()) and type(e) is not Hulk:

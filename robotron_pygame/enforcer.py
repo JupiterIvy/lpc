@@ -109,7 +109,7 @@ class Sphereoids:
 class Enforcer:
     collided_player = False
     size = 30
-    speed = 5
+    speed = 10
     elapsed = 0
     
     def __init__(self, pos):
@@ -179,7 +179,7 @@ class Enforcer:
 class EnforcerBullet:
     collided_player = False
     size = 30
-    speed = 8
+    speed = 15
     elapsed = 0
 
     def __init__(self, pos, player_coords):
