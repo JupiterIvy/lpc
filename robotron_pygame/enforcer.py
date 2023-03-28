@@ -24,7 +24,7 @@ class Sphereoids:
         self.start_time = 0
         self.end = 0
         self.timer = 0
-        self.clock = random.randint(50, 100)
+        self.clock = random.randint(100, 500)
         self.enforcer_count = 0
         self.enforcer_limit = random.randint(2, 4)
         self.corners = [(120, 70),
@@ -89,7 +89,7 @@ class Sphereoids:
         if self.timer >= self.clock:
             self.enforcer_count += 1
             self.timer = 0
-            self.clock = random.randint(50, 100)
+            self.clock = random.randint(100, 500)
             return True
 
     def draw(self, surface: pygame.Surface):
@@ -120,6 +120,9 @@ class Enforcer:
         self.y = pos[1]
         self.start_time = 0
         self.end = 0
+        self.timer = 0
+        self.clock = random.randint(100, 500)
+        self.bullet = []
 
     def animate_idle(self):
         self.elapsed += 1
@@ -144,12 +147,81 @@ class Enforcer:
     def get_coord(self):
         return (self.x, self.y)
 
-    def move_toward_player(self, player_coords):
+    def move(self, player_coords):
         dx = player_coords[0] - self.x
         dy = player_coords[1] - self.y
         angle = math.atan2(dy, dx)
         self.start_time += 1
         if self.start_time == 5: 
+            self.x += self.speed * math.cos(angle)
+            self.y += self.speed * math.sin(angle)
+        if self.start_time > 5:
+            self.start_time = 0
+
+    def shoot(self):
+        self.timer += 1
+
+        if self.timer >= self.clock:
+            self.timer = 0
+            self.clock = random.randint(100, 500)
+            return True
+
+    def draw(self, surface: pygame.Surface):
+        self.animate_idle()
+        surface.blit(self.get_image(), self.get_coord())
+
+    def is_colliding_player(self, player_rect):
+        self.collided_player = pygame.Rect(
+            self.x, self.y, self.size, self.size).colliderect(player_rect)
+        return self.collided_player
+
+
+class EnforcerBullet:
+    collided_player = False
+    size = 30
+    speed = 5
+    elapsed = 0
+
+    def __init__(self, pos, player_coords):
+        self.enforcer_bullet_sprite = pygame.image.load(
+            "img/enforcer_bullet.png").convert_alpha()
+        self.enforcer_bullet_angle = 0
+        self.x = pos[0]
+        self.y = pos[1]
+        self.target = player_coords
+        self.start_time = 0
+        self.end = 0
+        self.bullet = []
+
+    def animate_idle(self):
+        self.elapsed += 1
+        if self.elapsed == 10:
+            self.enforcer_bullet_angle += 1
+        if self.elapsed > 10:
+            self.elapsed = 0
+        if self.enforcer_bullet_angle > 5:
+            self.enforcer_bullet_angle = 0
+
+    def get_image(self) -> pygame.Surface:
+        sub = self.enforcer_bullet_sprite.subsurface(
+            (self.enforcer_bullet_angle * self.size, 0, self.size, self.size))
+
+        vertical = 0
+        horizontal = 0
+        return pygame.transform.flip(sub, horizontal, vertical)
+
+    def get_rect(self):
+        return (self.x, self.y, self.size, self.size)
+
+    def get_coord(self):
+        return (self.x, self.y)
+
+    def move(self):
+        dx = self.target[0] - self.x
+        dy = self.target[1] - self.y
+        angle = math.atan2(dy, dx)
+        self.start_time += 1
+        if self.start_time == 5:
             self.x += self.speed * math.cos(angle)
             self.y += self.speed * math.sin(angle)
         if self.start_time > 5:
